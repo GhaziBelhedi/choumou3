@@ -121,6 +121,42 @@
         </div>
 
         <div class="tabs__panel" data-tab-panel="avis">
+            @auth
+                @if (! $book->reviews()->where('user_id', auth()->id())->exists())
+                    <form method="POST" action="{{ route('reviews.store', $book) }}" class="card" style="margin-bottom:var(--space-6);max-width:520px">
+                        @csrf
+                        <h3 style="font-family:var(--font-serif);font-size:var(--text-base);margin-bottom:var(--space-4)">Donner votre avis</h3>
+
+                        <div class="field">
+                            <label class="field__label">Note</label>
+                            <div class="star-rating-input" style="margin-top:var(--space-2)">
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <input type="radio" name="rating" value="{{ $i }}" id="rating-{{ $i }}" required>
+                                    <label for="rating-{{ $i }}">★</label>
+                                @endfor
+                            </div>
+                            <span class="field__hint">Sélectionnez de 1 à 5 étoiles.</span>
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="review-title">Titre <span class="text-faint">(optionnel)</span></label>
+                            <input class="input" type="text" id="review-title" name="title" maxlength="150">
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="review-comment">Commentaire</label>
+                            <textarea class="textarea" id="review-comment" name="comment" rows="3" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Envoyer mon avis</button>
+                    </form>
+                @endif
+            @else
+                <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:var(--space-6)">
+                    <a href="{{ route('login') }}" class="text-primary">Connectez-vous</a> pour laisser un avis sur ce livre.
+                </p>
+            @endauth
+
             @forelse ($book->approvedReviews as $review)
                 <div class="review-item">
                     <div class="review-item__header">

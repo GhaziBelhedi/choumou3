@@ -189,6 +189,36 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* ---------- Widget de notation par étoiles (formulaire d'avis) ---------- */
+
+.star-rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.star-rating-input input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.star-rating-input label {
+    font-size: var(--text-2xl);
+    line-height: 1;
+    color: var(--color-border);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.star-rating-input input:checked ~ label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label {
+    color: var(--color-gold);
+}
+
 /* ---------- Dropdowns ---------- */
 
 .dropdown-panel {
@@ -272,8 +302,11 @@
     transform: translateY(-2px);
 }
 
-.product-card__thumb {
+.product-card__thumb-wrap {
     position: relative;
+}
+
+.product-card__thumb {
     display: block;
     aspect-ratio: 3 / 4.2;
     background: var(--color-paper-soft);
@@ -297,14 +330,23 @@
     left: var(--space-3);
 }
 
-.product-card__wishlist {
+.product-card__wishlist-form {
     position: absolute;
     top: var(--space-2);
     right: var(--space-2);
+}
+
+.product-card__wishlist {
     background: var(--color-white);
     box-shadow: var(--shadow-sm);
     width: 34px;
     height: 34px;
+}
+
+.product-card__thumb-wrap > a.product-card__wishlist {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
 }
 
 .product-card__wishlist.is-active {

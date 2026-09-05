@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.app', function ($view) {
             $cart = app(CartService::class)->peekCart();
             $view->with('cartCount', $cart ? $cart->itemsCount() : 0);
+
+            if (Auth::check()) {
+                $view->with('unreadNotificationsCount', Auth::user()->unreadNotifications()->count());
+                $view->with('latestNotifications', Auth::user()->notifications()->latest()->limit(5)->get());
+            }
         });
+
     }
 }

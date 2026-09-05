@@ -78,6 +78,15 @@ class Book extends Model
         return $query->where('is_featured', true);
     }
 
+    /**
+     * Les routes {book} (wishlist, avis...) résolvent le modèle par slug, pas par id,
+     * pour rester cohérent avec les URLs du catalogue (/livres/{slug}).
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function isOnSale(): bool
     {
         return ! is_null($this->compare_at_price) && (float) $this->compare_at_price > (float) $this->price;
@@ -90,6 +99,20 @@ class Book extends Model
         }
 
         return (int) round((1 - ($this->price / $this->compare_at_price)) * 100);
+    }
+
+    /**
+     * Recalcule average_rating / reviews_count à partir des avis approuvés.
+     * Appelé quand un avis est approuvé/rejeté/supprimé (back-office, Phase 5).
+     */
+    public function recalculateRatingStats(): void
+    {
+        $stats = $this->approvedReviews()->selectRaw('AVG(rating) as avg_rating, COUNT(*) as cnt')->first();
+
+        $this->update([
+            'average_rating' => round((float) ($stats->avg_rating ?? 0), 2),
+            'reviews_count' => (int) ($stats->cnt ?? 0),
+        ]);
     }
 
     public function coverUrl(): string

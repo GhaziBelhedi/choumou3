@@ -5,8 +5,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderTrackingController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -36,6 +40,19 @@ Route::get('/suivi-commande', [OrderTrackingController::class, 'showForm'])->nam
 Route::post('/suivi-commande', [OrderTrackingController::class, 'track'])->name('orders.track.submit');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/mon-compte', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/mon-compte', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/mon-compte/mot-de-passe', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/mon-compte/adresses/{address}', [ProfileController::class, 'destroyAddress'])->name('profile.address.destroy');
+
     Route::get('/mon-compte/commandes', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/mon-compte/commandes/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    Route::get('/liste-de-souhaits', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/liste-de-souhaits/{book}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+    Route::post('/livres/{book}/avis', [ReviewController::class, 'store'])->name('reviews.store');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/tout-marquer-lu', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 });

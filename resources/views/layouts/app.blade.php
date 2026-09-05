@@ -38,13 +38,37 @@
 
                 @auth
                     <div style="position:relative">
+                        <button type="button" class="icon-btn" data-dropdown-toggle="notif-dropdown" aria-expanded="false" aria-label="Notifications">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            @if(($unreadNotificationsCount ?? 0) > 0)
+                                <span class="icon-btn__badge">{{ $unreadNotificationsCount }}</span>
+                            @endif
+                        </button>
+                        <div id="notif-dropdown" class="dropdown-panel" style="position:absolute;right:0;top:48px;background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);min-width:280px;max-width:340px;padding:var(--space-2);z-index:var(--z-dropdown)">
+                            @forelse (($latestNotifications ?? collect()) as $notif)
+                                <div style="padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);font-size:var(--text-sm)">
+                                    @if ($notif->data['type'] === 'order_status_updated')
+                                        Commande {{ $notif->data['order_number'] }} : {{ $notif->data['status_label'] }}
+                                    @elseif ($notif->data['type'] === 'review_approved')
+                                        Votre avis sur « {{ $notif->data['book_title'] }} » a été publié
+                                    @endif
+                                    <p class="text-faint" style="font-size:var(--text-xs);margin-top:2px">{{ $notif->created_at->diffForHumans() }}</p>
+                                </div>
+                            @empty
+                                <p class="text-faint" style="padding:var(--space-3);font-size:var(--text-sm)">Aucune notification.</p>
+                            @endforelse
+                            <a href="{{ route('notifications.index') }}" class="site-footer__link text-primary" style="padding:var(--space-2) var(--space-3);text-align:center;display:block">Tout voir</a>
+                        </div>
+                    </div>
+
+                    <div style="position:relative">
                         <button type="button" class="icon-btn" data-dropdown-toggle="account-dropdown" aria-expanded="false" aria-label="Mon compte">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
                         </button>
                         <div id="account-dropdown" class="dropdown-panel" style="position:absolute;right:0;top:48px;background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);min-width:200px;padding:var(--space-2);z-index:var(--z-dropdown)">
-                            <a href="{{ url('/mon-compte') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mon profil</a>
-                            <a href="{{ url('/mon-compte/commandes') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mes commandes</a>
-                            <a href="{{ url('/mon-compte/liste-de-souhaits') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Liste de souhaits</a>
+                            <a href="{{ route('profile.edit') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mon profil</a>
+                            <a href="{{ route('orders.index') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mes commandes</a>
+                            <a href="{{ route('wishlist.index') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Liste de souhaits</a>
                             <form method="POST" action="{{ url('/deconnexion') }}">
                                 @csrf
                                 <button type="submit" class="site-footer__link" style="color:var(--color-danger);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);width:100%;text-align:left">Déconnexion</button>
@@ -57,7 +81,7 @@
                     </a>
                 @endauth
 
-                <a href="{{ url('/liste-de-souhaits') }}" class="icon-btn" aria-label="Liste de souhaits">
+                <a href="{{ auth()->check() ? route('wishlist.index') : route('login') }}" class="icon-btn" aria-label="Liste de souhaits">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C.8 8.4 2.4 5 6 5c2 0 3.4 1.1 4 2.2C10.6 6.1 12 5 14 5c3.6 0 5.2 3.4 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg>
                 </a>
 
@@ -87,7 +111,7 @@
             <a href="{{ url('/categories') }}" class="mobile-menu__link">Catégories</a>
             <a href="{{ url('/suivi-commande') }}" class="mobile-menu__link">Suivi de commande</a>
             @auth
-                <a href="{{ url('/mon-compte') }}" class="mobile-menu__link">Mon compte</a>
+                <a href="{{ route('profile.edit') }}" class="mobile-menu__link">Mon compte</a>
             @else
                 <a href="{{ url('/connexion') }}" class="mobile-menu__link">Connexion</a>
                 <a href="{{ url('/inscription') }}" class="mobile-menu__link">Créer un compte</a>
@@ -133,8 +157,8 @@
             </div>
             <div>
                 <p class="site-footer__heading">Mon compte</p>
-                <a href="{{ url('/mon-compte') }}" class="site-footer__link">Mon profil</a>
-                <a href="{{ url('/mon-compte/commandes') }}" class="site-footer__link">Mes commandes</a>
+                <a href="{{ route('profile.edit') }}" class="site-footer__link">Mon profil</a>
+                <a href="{{ route('orders.index') }}" class="site-footer__link">Mes commandes</a>
                 <a href="{{ url('/liste-de-souhaits') }}" class="site-footer__link">Liste de souhaits</a>
             </div>
         </div>
@@ -145,7 +169,6 @@
     </footer>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/wishlist.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
