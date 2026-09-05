@@ -79,7 +79,11 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $this->cartService->mergeGuestCartIntoUser(Auth::user());
 
-        return redirect()->intended(route('home'))
+        // Un admin qui se connecte directement (sans page précise en tête) atterrit
+        // sur le dashboard admin ; ->intended() garde priorité s'il visait une page précise.
+        $defaultRedirect = Auth::user()->isAdmin() ? route('admin.dashboard') : route('home');
+
+        return redirect()->intended($defaultRedirect)
             ->with('success', 'Connexion réussie. Ravis de vous revoir !');
     }
 
