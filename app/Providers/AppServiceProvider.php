@@ -36,5 +36,9 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        View::composer('admin.layouts.admin', function ($view) {
+            $view->with('pendingOrdersCount', \App\Models\Order::where('status', 'pending')->count());
+            $view->with('pendingReviewsCount', \App\Models\Review::where('is_approved', false)->count());
+        });
     }
 }

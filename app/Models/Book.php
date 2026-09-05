@@ -109,10 +109,13 @@ class Book extends Model
     {
         $stats = $this->approvedReviews()->selectRaw('AVG(rating) as avg_rating, COUNT(*) as cnt')->first();
 
-        $this->update([
+        // average_rating/reviews_count sont volontairement absents du Fillable (ce sont des
+        // statistiques calculées, pas des champs éditables par formulaire) — forceFill() les
+        // met à jour sans les exposer au mass-assignment classique.
+        $this->forceFill([
             'average_rating' => round((float) ($stats->avg_rating ?? 0), 2),
             'reviews_count' => (int) ($stats->cnt ?? 0),
-        ]);
+        ])->save();
     }
 
     public function coverUrl(): string
