@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', config('app.name', 'Librairie'))</title>
+    <meta name="description" content="@yield('meta_description', 'Librairie en ligne — livres physiques, livraison partout en Tunisie, paiement à la livraison.')">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/variables.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    @stack('styles')
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a href="{{ url('/') }}" class="site-logo">Choumou3<span>.</span></a>
+
+            <nav class="site-nav" aria-label="Navigation principale">
+                <a href="{{ url('/') }}" class="site-nav__link {{ request()->is('/') ? 'is-active' : '' }}">Accueil</a>
+                <a href="{{ url('/livres') }}" class="site-nav__link {{ request()->is('livres*') ? 'is-active' : '' }}">Catalogue</a>
+                <a href="{{ url('/categories') }}" class="site-nav__link {{ request()->is('categories*') ? 'is-active' : '' }}">Catégories</a>
+                <a href="{{ url('/suivi-commande') }}" class="site-nav__link {{ request()->is('suivi-commande') ? 'is-active' : '' }}">Suivi de commande</a>
+            </nav>
+
+            <div class="site-header__actions">
+                <button type="button" class="icon-btn" aria-label="Rechercher" data-search-toggle>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                </button>
+
+                @auth
+                    <div style="position:relative">
+                        <button type="button" class="icon-btn" data-dropdown-toggle="account-dropdown" aria-expanded="false" aria-label="Mon compte">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+                        </button>
+                        <div id="account-dropdown" class="dropdown-panel" style="position:absolute;right:0;top:48px;background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);min-width:200px;padding:var(--space-2);z-index:var(--z-dropdown)">
+                            <a href="{{ url('/mon-compte') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mon profil</a>
+                            <a href="{{ url('/mon-compte/commandes') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Mes commandes</a>
+                            <a href="{{ url('/mon-compte/liste-de-souhaits') }}" class="site-footer__link" style="color:var(--color-ink);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm)">Liste de souhaits</a>
+                            <form method="POST" action="{{ url('/deconnexion') }}">
+                                @csrf
+                                <button type="submit" class="site-footer__link" style="color:var(--color-danger);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);width:100%;text-align:left">Déconnexion</button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ url('/connexion') }}" class="icon-btn" aria-label="Connexion">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+                    </a>
+                @endauth
+
+                <a href="{{ url('/liste-de-souhaits') }}" class="icon-btn" aria-label="Liste de souhaits">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C.8 8.4 2.4 5 6 5c2 0 3.4 1.1 4 2.2C10.6 6.1 12 5 14 5c3.6 0 5.2 3.4 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg>
+                </a>
+
+                <a href="{{ url('/panier') }}" class="icon-btn" aria-label="Panier">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+                    @if(($cartCount ?? 0) > 0)
+                        <span class="icon-btn__badge">{{ $cartCount }}</span>
+                    @endif
+                </a>
+
+                <button type="button" class="menu-toggle icon-btn" data-menu-toggle aria-label="Menu" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" data-mobile-menu>
+        <div class="mobile-menu__overlay" data-menu-overlay></div>
+        <div class="mobile-menu__panel">
+            <div class="flex-between" style="margin-bottom:var(--space-6)">
+                <span class="site-logo">Choumou3<span>.</span></span>
+                <button type="button" class="icon-btn" data-menu-close aria-label="Fermer">✕</button>
+            </div>
+            <a href="{{ url('/') }}" class="mobile-menu__link">Accueil</a>
+            <a href="{{ url('/livres') }}" class="mobile-menu__link">Catalogue</a>
+            <a href="{{ url('/categories') }}" class="mobile-menu__link">Catégories</a>
+            <a href="{{ url('/suivi-commande') }}" class="mobile-menu__link">Suivi de commande</a>
+            @auth
+                <a href="{{ url('/mon-compte') }}" class="mobile-menu__link">Mon compte</a>
+            @else
+                <a href="{{ url('/connexion') }}" class="mobile-menu__link">Connexion</a>
+                <a href="{{ url('/inscription') }}" class="mobile-menu__link">Créer un compte</a>
+            @endauth
+        </div>
+    </div>
+
+    <main>
+        @if (session('success'))
+            <div class="container" style="padding-top:var(--space-4)">
+                <div class="alert alert-success" data-auto-dismiss>{{ session('success') }}</div>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="container" style="padding-top:var(--space-4)">
+                <div class="alert alert-danger" data-auto-dismiss>{{ session('error') }}</div>
+            </div>
+        @endif
+
+        @yield('content')
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__grid">
+            <div>
+                <p class="site-logo" style="color:var(--color-white)">Choumou3<span>.</span></p>
+                <p style="margin-top:var(--space-4);font-size:var(--text-sm);opacity:0.8;max-width:32ch">
+                    Votre librairie en ligne : des milliers de livres, livrés partout en Tunisie, paiement à la réception.
+                </p>
+            </div>
+            <div>
+                <p class="site-footer__heading">Boutique</p>
+                <a href="{{ url('/livres') }}" class="site-footer__link">Catalogue</a>
+                <a href="{{ url('/categories') }}" class="site-footer__link">Catégories</a>
+                <a href="{{ url('/livres?tri=nouveautes') }}" class="site-footer__link">Nouveautés</a>
+                <a href="{{ url('/livres?tri=meilleures-ventes') }}" class="site-footer__link">Meilleures ventes</a>
+            </div>
+            <div>
+                <p class="site-footer__heading">Aide</p>
+                <a href="{{ url('/suivi-commande') }}" class="site-footer__link">Suivi de commande</a>
+                <a href="{{ url('/livraison') }}" class="site-footer__link">Livraison &amp; paiement</a>
+                <a href="{{ url('/contact') }}" class="site-footer__link">Contact</a>
+            </div>
+            <div>
+                <p class="site-footer__heading">Mon compte</p>
+                <a href="{{ url('/mon-compte') }}" class="site-footer__link">Mon profil</a>
+                <a href="{{ url('/mon-compte/commandes') }}" class="site-footer__link">Mes commandes</a>
+                <a href="{{ url('/liste-de-souhaits') }}" class="site-footer__link">Liste de souhaits</a>
+            </div>
+        </div>
+        <div class="container site-footer__bottom">
+            <span>&copy; {{ date('Y') }} Choumou3 — Tous droits réservés.</span>
+            <span>Paiement à la livraison &middot; Livraison partout en Tunisie</span>
+        </div>
+    </footer>
+
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    @stack('scripts')
+</body>
+</html>
