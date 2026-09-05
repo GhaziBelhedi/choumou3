@@ -169,6 +169,58 @@
         </div>
     </footer>
 
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget" data-chatbot>
+        <button class="chatbot-toggle-btn" data-chatbot-toggle aria-label="Ouvrir le chat">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="chatbot-toggle-badge">1</span>
+        </button>
+
+        <div class="chatbot-window" data-chatbot-window hidden>
+            <div class="chatbot-header">
+                <div class="chatbot-header__info">
+                    <span class="chatbot-header__avatar">💬</span>
+                    <div>
+                        <p class="chatbot-header__title">Assistant Choumou3</p>
+                        <p class="chatbot-header__status"><span class="chatbot-header__status-dot"></span> En ligne</p>
+                    </div>
+                </div>
+                <button class="chatbot-close-btn" data-chatbot-close aria-label="Fermer le chat">✕</button>
+            </div>
+
+            <div class="chatbot-body" data-chatbot-messages>
+                <div class="chatbot-message chatbot-message--bot">
+                    <div class="chatbot-message__text">
+                        Bonjour ! Je suis l'assistant intelligent de **Choumou3**. Comment puis-je vous aider aujourd'hui ? 📚✨
+                    </div>
+                </div>
+                <div class="chatbot-message chatbot-message--bot">
+                    <div class="chatbot-message__text">
+                        Vous pouvez me poser des questions sur nos livres, nos fournitures, la livraison ou le suivi de votre commande.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatbot-suggestions">
+                <button class="chatbot-suggestion-chip" data-chatbot-suggest="Frais de livraison">🚚 Tarifs de livraison</button>
+                <button class="chatbot-suggestion-chip" data-chatbot-suggest="Suivre ma commande">📦 Suivi de commande</button>
+                <button class="chatbot-suggestion-chip" data-chatbot-suggest="Horaires & Contact">📞 Service client</button>
+            </div>
+
+            <form class="chatbot-input-area" data-chatbot-form>
+                <input type="text" class="chatbot-input" placeholder="Écrivez votre message..." aria-label="Message du chat" data-chatbot-input required>
+                <button type="submit" class="chatbot-send-btn" aria-label="Envoyer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/js/cart.js') }}"></script>
     <script src="{{ asset('assets/js/wishlist.js') }}"></script>

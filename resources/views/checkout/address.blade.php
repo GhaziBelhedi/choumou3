@@ -63,10 +63,11 @@
                         <option value="">Sélectionner...</option>
                         @foreach ($governorates as $gov)
                             <option value="{{ $gov->id }}" @selected(old('governorate_id', $old['governorate_id'] ?? null) == $gov->id)>
-                                {{ $gov->name }} — {{ number_format((float) $gov->shipping_price, 2) }} DT
+                                {{ $gov->name }}
                             </option>
                         @endforeach
                     </select>
+                    <span class="field__hint">Livraison à {{ number_format((float) \App\Models\Setting::get('flat_shipping_price', 0), 2) }} DT partout en Tunisie.</span>
                 </div>
 
                 <div class="field">

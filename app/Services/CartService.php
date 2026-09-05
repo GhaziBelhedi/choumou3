@@ -147,12 +147,15 @@ class CartService
             : 0.0;
 
         $freeThreshold = (float) Setting::get('free_shipping_threshold', 0);
+        $flatShippingPrice = (float) Setting::get('flat_shipping_price', 0);
         $shipping = 0.0;
 
+        // $governorate n'est plus utilisé pour le tarif (unique pour toute la Tunisie) — sa
+        // présence indique simplement qu'on est à l'étape où les frais doivent être calculés.
         if ($governorate) {
             $shipping = ($freeThreshold > 0 && $subtotal >= $freeThreshold)
                 ? 0.0
-                : (float) $governorate->shipping_price;
+                : $flatShippingPrice;
         }
 
         $total = max($subtotal - $discount + $shipping, 0);

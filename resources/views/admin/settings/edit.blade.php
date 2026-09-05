@@ -12,6 +12,12 @@
         @method('PATCH')
 
         <div class="field">
+            <label class="field__label" for="flat_shipping_price">Tarif de livraison (DT)</label>
+            <input class="input" type="number" step="0.5" min="0" id="flat_shipping_price" name="flat_shipping_price" value="{{ old('flat_shipping_price', $flatShippingPrice) }}" required>
+            <span class="field__hint">Tarif unique appliqué à toute commande, quel que soit le gouvernorat.</span>
+        </div>
+
+        <div class="field">
             <label class="field__label" for="free_shipping_threshold">Seuil de livraison gratuite (DT)</label>
             <input class="input" type="number" step="0.5" min="0" id="free_shipping_threshold" name="free_shipping_threshold" value="{{ old('free_shipping_threshold', $freeShippingThreshold) }}" required>
             <span class="field__hint">Au-delà de ce montant, la livraison est offerte. Mettre 0 pour désactiver.</span>

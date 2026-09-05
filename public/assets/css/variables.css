@@ -6,47 +6,48 @@
 
 :root {
     /* Couleurs de base */
-    --color-paper: #FDFBF8;          /* fond général, blanc chaud et lumineux */
-    --color-paper-soft: #F5F1EA;     /* fond secondaire (cartes, sections alternées) */
-    --color-paper-strong: #EBE3D5;   /* bordures douces, séparateurs */
-    --color-ink: #1A1523;            /* texte principal, encre profonde */
-    --color-ink-soft: #55506A;       /* texte secondaire */
-    --color-ink-faint: #8B8598;      /* texte tertiaire, placeholders */
+    --color-paper: #FDFCF7;          /* fond général, blanc chaud et lumineux */
+    --color-paper-soft: #F4EFE6;     /* fond secondaire (cartes, sections alternées) */
+    --color-paper-strong: #E8DFC9;   /* bordures douces, séparateurs */
+    --color-ink: #15121D;            /* texte principal, encre profonde */
+    --color-ink-soft: #4E485F;       /* texte secondaire */
+    --color-ink-faint: #827B91;      /* texte tertiaire, placeholders */
 
     /* Accent primaire — rouge vif (CTA, liens, éléments actifs) */
-    --color-primary: #E63946;
-    --color-primary-dark: #C1121F;
-    --color-primary-light: #FF6B6B;
-    --color-primary-tint: #FDE6E6;   /* fond léger sur accent (badges, hover) */
+    --color-primary: #9C2A3C;
+    --color-primary-dark: #7A1A28;
+    --color-primary-light: #BD4B5E;
+    --color-primary-tint: #FAF0F2;   /* fond léger sur accent (badges, hover) */
 
     /* Accent secondaire — ambre vif (étoiles, promos, mise en valeur) */
-    --color-gold: #FFB703;
-    --color-gold-dark: #E08E00;
-    --color-gold-tint: #FFF3D6;
+    --color-gold: #D97706;
+    --color-gold-dark: #B45309;
+    --color-gold-tint: #FEF3C7;
 
     /* Accent tertiaire — sarcelle vive (variété, deals, contrastes) */
-    --color-accent: #06B6A8;
-    --color-accent-dark: #048A80;
-    --color-accent-tint: #DFF7F4;
+    --color-accent: #1B7F7A;
+    --color-accent-dark: #115E5B;
+    --color-accent-tint: #E6F4F3;
 
     /* Dégradés (hero, bandeaux, deal du jour) */
-    --gradient-primary: linear-gradient(135deg, #E63946 0%, #C1121F 55%, #7B1520 100%);
-    --gradient-vivid: linear-gradient(135deg, #E63946 0%, #FFB703 100%);
-    --gradient-ink: linear-gradient(135deg, #1A1523 0%, #2E2440 100%);
+    --gradient-primary: linear-gradient(135deg, #9C2A3C 0%, #7A1A28 60%, #4E0A14 100%);
+    --gradient-vivid: linear-gradient(135deg, #9C2A3C 0%, #D97706 100%);
+    --gradient-ink: linear-gradient(135deg, #13111C 0%, #2A2135 100%);
 
     /* États sémantiques */
-    --color-success: #2DA44E;
-    --color-success-tint: #E3F7E9;
-    --color-danger: #E5484D;
-    --color-danger-tint: #FDECEC;
-    --color-warning: #FFB703;
-    --color-warning-tint: #FFF3D6;
+    --color-success: #10B981;
+    --color-success-tint: #ECFDF5;
+    --color-danger: #EF4444;
+    --color-danger-dark: #DC2626;
+    --color-danger-tint: #FEF2F2;
+    --color-warning: #F59E0B;
+    --color-warning-tint: #FEF3C7;
     --color-info: #3B82F6;
-    --color-info-tint: #E9F0FE;
+    --color-info-tint: #EFF6FF;
 
     --color-white: #FFFFFF;
-    --color-border: #E9E1D3;
-    --color-overlay: rgba(26, 21, 35, 0.6);
+    --color-border: #E8DFC9;
+    --color-overlay: rgba(21, 18, 29, 0.6);
 
     /* Typographie */
     --font-serif: "Lora", Georgia, "Times New Roman", serif;
@@ -88,10 +89,10 @@
     --radius-full: 999px;
 
     /* Ombres */
-    --shadow-sm: 0 1px 2px rgba(26, 21, 35, 0.06);
-    --shadow-md: 0 4px 12px rgba(26, 21, 35, 0.10);
-    --shadow-lg: 0 12px 32px rgba(26, 21, 35, 0.16);
-    --shadow-glow: 0 8px 28px rgba(230, 57, 70, 0.28);
+    --shadow-sm: 0 1px 2px rgba(26, 21, 35, 0.05);
+    --shadow-md: 0 6px 16px rgba(26, 21, 35, 0.07);
+    --shadow-lg: 0 16px 36px rgba(26, 21, 35, 0.12);
+    --shadow-glow: 0 8px 30px rgba(156, 42, 60, 0.22);
 
     /* Layout */
     --container-max: 1280px;

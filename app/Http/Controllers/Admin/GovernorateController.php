@@ -19,14 +19,10 @@ class GovernorateController extends Controller
 
     public function update(Request $request, Governorate $governorate): RedirectResponse
     {
-        $data = $request->validate([
-            'shipping_price' => ['required', 'numeric', 'min:0'],
+        $governorate->update([
+            'is_active' => $request->boolean('is_active'),
         ]);
 
-        $data['is_active'] = $request->boolean('is_active', true);
-
-        $governorate->update($data);
-
-        return back()->with('success', "Tarif mis à jour pour {$governorate->name}.");
+        return back()->with('success', "{$governorate->name} mis à jour.");
     }
 }

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initQuantityStepper();
     initToasts();
     initScrollReveal();
+    initChatbot();
 });
 
 /* ---------- Menu mobile ---------- */
@@ -235,3 +236,147 @@ window.getRecentlyViewedIds = function () {
         return [];
     }
 };
+
+/* ---------- Chatbot Widget ---------- */
+function initChatbot() {
+    var widget = document.querySelector('[data-chatbot]');
+    if (!widget) return;
+
+    var toggleBtn = widget.querySelector('[data-chatbot-toggle]');
+    var closeBtn = widget.querySelector('[data-chatbot-close]');
+    var windowPanel = widget.querySelector('[data-chatbot-window]');
+    var messagesContainer = widget.querySelector('[data-chatbot-messages]');
+    var form = widget.querySelector('[data-chatbot-form]');
+    var input = widget.querySelector('[data-chatbot-input]');
+    var suggestionChips = widget.querySelectorAll('[data-chatbot-suggest]');
+    var badge = widget.querySelector('.chatbot-toggle-badge');
+
+    var isOpen = false;
+
+    // Toggle Chat window
+    function toggleChat() {
+        isOpen = !isOpen;
+        if (isOpen) {
+            windowPanel.removeAttribute('hidden');
+            setTimeout(function() {
+                windowPanel.classList.add('is-open');
+                input.focus();
+            }, 10);
+            if (badge) badge.style.display = 'none';
+        } else {
+            windowPanel.classList.remove('is-open');
+            setTimeout(function() {
+                if (!isOpen) windowPanel.setAttribute('hidden', '');
+            }, 300);
+        }
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleChat);
+    if (closeBtn) closeBtn.addEventListener('click', toggleChat);
+
+    // Append Message helper
+    function appendMessage(text, sender) {
+        var msgDiv = document.createElement('div');
+        msgDiv.className = 'chatbot-message chatbot-message--' + sender;
+        
+        var textDiv = document.createElement('div');
+        textDiv.className = 'chatbot-message__text';
+        textDiv.innerHTML = text;
+        
+        msgDiv.appendChild(textDiv);
+        messagesContainer.appendChild(msgDiv);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Typing Indicator helper
+    var activeTypingIndicator = null;
+    function showTypingIndicator() {
+        if (activeTypingIndicator) return;
+        
+        var msgDiv = document.createElement('div');
+        msgDiv.className = 'chatbot-message chatbot-message--bot';
+        msgDiv.id = 'chatbot-typing-indicator';
+        
+        var textDiv = document.createElement('div');
+        textDiv.className = 'chatbot-message__text';
+        
+        var typingDiv = document.createElement('div');
+        typingDiv.className = 'chatbot-typing';
+        typingDiv.innerHTML = '<span></span><span></span><span></span>';
+        
+        textDiv.appendChild(typingDiv);
+        msgDiv.appendChild(textDiv);
+        messagesContainer.appendChild(msgDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        activeTypingIndicator = msgDiv;
+    }
+
+    function removeTypingIndicator() {
+        if (activeTypingIndicator) {
+            activeTypingIndicator.remove();
+            activeTypingIndicator = null;
+        }
+    }
+
+    // Bot Response Logic
+    function handleBotReply(userQuery) {
+        showTypingIndicator();
+        
+        var query = userQuery.toLowerCase().trim();
+        var reply = "";
+        
+        // Match responses
+        if (query.indexOf('livraison') > -1 || query.indexOf('tarif') > -1 || query.indexOf('frais') > -1) {
+            reply = "Nous livrons partout en Tunisie. 🚚<br><br>" +
+                    "• **Tarif standard** : 7 DT fixe.<br>" +
+                    "• **Livraison gratuite** : à partir de 80 DT d'achats !<br>" +
+                    "• **Délai** : 24h à 72h ouvrables selon votre région.";
+        } else if (query.indexOf('suivi') > -1 || query.indexOf('suivre') > -1 || query.indexOf('commande') > -1) {
+            reply = "Vous pouvez suivre le statut de votre colis en temps réel ! 📦<br><br>" +
+                    "Rendez-vous sur notre page [Suivi de commande](/suivi-commande) et entrez votre numéro de référence reçu par SMS ou par email.";
+        } else if (query.indexOf('contact') > -1 || query.indexOf('horaire') > -1 || query.indexOf('téléphone') > -1 || query.indexOf('telephone') > -1) {
+            reply = "Notre équipe est disponible pour vous accompagner ! 📞<br><br>" +
+                    "• **Téléphone** : +216 71 000 000 (Lun-Ven, 8h30-17h30)<br>" +
+                    "• **Email** : contact@choumou3.test<br>" +
+                    "• **Adresse** : Avenue Habib Bourguiba, Tunis.";
+        } else if (query.indexOf('retour') > -1 || query.indexOf('remboursement') > -1 || query.indexOf('échange') > -1) {
+            reply = "Vous changez d'avis ? Pas de souci ! ♻️<br><br>" +
+                    "Vous disposez de **14 jours** après réception pour retourner un article non ouvert/non utilisé. Contactez le service client pour organiser le ramassage.";
+        } else if (query.indexOf('bonjour') > -1 || query.indexOf('salut') > -1 || query.indexOf('hi') > -1) {
+            reply = "Bonjour ! Comment puis-je vous aider aujourd'hui ? Je peux vous parler de nos tarifs de livraison, du suivi de commande, ou de nos horaires. 😊";
+        } else {
+            reply = "Je suis ravi de vous aider ! Pour toute question spécifique sur un produit, un achat en gros ou un problème de paiement, vous pouvez aussi contacter directement nos conseillers au +216 71 000 000. 📚✨";
+        }
+
+        setTimeout(function() {
+            removeTypingIndicator();
+            appendMessage(reply, 'bot');
+        }, 1200);
+    }
+
+    // Submit form handler
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var text = input.value.trim();
+            if (!text) return;
+            
+            appendMessage(text, 'user');
+            input.value = '';
+            
+            handleBotReply(text);
+        });
+    }
+
+    // Click on suggestion chips
+    suggestionChips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            var text = chip.getAttribute('data-chatbot-suggest') || chip.textContent;
+            appendMessage(text, 'user');
+            handleBotReply(text);
+        });
+    });
+}
