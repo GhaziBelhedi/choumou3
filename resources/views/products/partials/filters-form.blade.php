@@ -56,16 +56,6 @@
     </div>
 
     <div class="filter-group">
-        <label class="field__label" for="filter-editeur">Éditeur</label>
-        <select class="select" style="margin-top:var(--space-2)" id="filter-editeur" name="editeur">
-            <option value="">Tous les éditeurs</option>
-            @foreach ($publishers as $publisher)
-                <option value="{{ $publisher->slug }}" @selected(request('editeur') === $publisher->slug)>{{ $publisher->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="filter-group">
         <p class="filter-group__title">Prix (DT)</p>
         <div class="filter-price-row">
             <input class="input" type="number" min="0" step="0.5" name="prix_min" value="{{ request('prix_min') }}" placeholder="Min">

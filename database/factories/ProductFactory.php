@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Publisher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -55,7 +54,6 @@ class ProductFactory extends Factory
             'description' => implode("\n\n", fake()->paragraphs(3)),
             'language' => fake()->randomElement(['fr', 'ar', 'en']),
             'pages' => fake()->numberBetween(96, 512),
-            'publisher_id' => Publisher::query()->inRandomOrder()->value('id'),
             'publication_date' => fake()->dateTimeBetween('-5 years', 'now'),
             'price' => $price,
             'compare_at_price' => $onSale ? round($price * 1.25, 2) : null,
@@ -88,7 +86,6 @@ class ProductFactory extends Factory
                 'description' => fake()->sentence(15),
                 'language' => null,
                 'pages' => null,
-                'publisher_id' => null,
                 'publication_date' => null,
                 'price' => $price,
                 'compare_at_price' => $onSale ? round($price * 1.2, 2) : null,

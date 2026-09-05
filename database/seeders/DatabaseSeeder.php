@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             GovernorateSeeder::class,
             SettingSeeder::class,
             CategorySeeder::class,
-            PublisherSeeder::class,
             ProductSeeder::class,
         ]);
 

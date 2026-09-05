@@ -6,14 +6,13 @@ use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'type', 'title', 'slug', 'author', 'isbn', 'description', 'language', 'pages',
-    'publisher_id', 'publication_date', 'price', 'compare_at_price',
+    'publication_date', 'price', 'compare_at_price',
     'stock_quantity', 'sku', 'cover_path', 'is_featured', 'is_active', 'deal_ends_at',
 ])]
 class Product extends Model
@@ -37,11 +36,6 @@ class Product extends Model
             'is_active' => 'boolean',
             'deal_ends_at' => 'datetime',
         ];
-    }
-
-    public function publisher(): BelongsTo
-    {
-        return $this->belongsTo(Publisher::class);
     }
 
     public function categories(): BelongsToMany

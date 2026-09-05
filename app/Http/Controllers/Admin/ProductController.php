@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
-use App\Models\Publisher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +18,7 @@ class ProductController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Product::query()->with('publisher')->withCount('reviews');
+        $query = Product::query()->withCount('reviews');
 
         if ($type = $request->string('type')->toString()) {
             $query->where('type', $type);
@@ -50,7 +49,6 @@ class ProductController extends Controller
     {
         return view('admin.products.create', [
             'categories' => Category::orderBy('name')->get(),
-            'publishers' => Publisher::orderBy('name')->get(),
         ]);
     }
 
@@ -79,7 +77,6 @@ class ProductController extends Controller
         return view('admin.products.edit', [
             'product' => $product,
             'categories' => Category::orderBy('name')->get(),
-            'publishers' => Publisher::orderBy('name')->get(),
         ]);
     }
 
@@ -143,7 +140,6 @@ class ProductController extends Controller
             'description' => ['required', 'string'],
             'language' => ['nullable', 'in:fr,ar,en'],
             'pages' => ['nullable', 'integer', 'min:1'],
-            'publisher_id' => ['nullable', 'exists:publishers,id'],
             'publication_date' => ['nullable', 'date'],
             'price' => ['required', 'numeric', 'min:0'],
             'compare_at_price' => ['nullable', 'numeric', 'min:0', 'gt:price'],
@@ -159,7 +155,6 @@ class ProductController extends Controller
             'author' => 'auteur',
             'price' => 'prix',
             'stock_quantity' => 'stock',
-            'publisher_id' => 'éditeur',
         ]);
 
         $data['is_featured'] = $request->boolean('is_featured');

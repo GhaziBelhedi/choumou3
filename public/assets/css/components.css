@@ -42,7 +42,7 @@
     background: var(--color-danger);
     color: var(--color-white);
 }
-.btn-danger:hover { background: #7E2A22; }
+.btn-danger:hover { background: #C81E24; }
 
 .btn-block { width: 100%; }
 

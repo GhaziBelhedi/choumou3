@@ -90,7 +90,6 @@
             <div class="product-info__meta">
                 @if ($product->isBook())
                     <div><span>Auteur</span>{{ $product->author }}</div>
-                    <div><span>Éditeur</span>{{ $product->publisher->name ?? '—' }}</div>
                     <div><span>ISBN</span>{{ $product->isbn ?? '—' }}</div>
                     <div><span>Pages</span>{{ $product->pages ?? '—' }}</div>
                     <div><span>Langue</span>{{ ['fr' => 'Français', 'ar' => 'Arabe', 'en' => 'Anglais'][$product->language] ?? '—' }}</div>

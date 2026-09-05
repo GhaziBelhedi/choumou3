@@ -1,42 +1,52 @@
 /*
- * Design tokens — Plateforme librairie
- * Palette "Encre & Papier" : identité chaleureuse et éditoriale.
+ * Design tokens — Plateforme Choumou3
+ * Palette "Encre Vive" : identité chaleureuse mais vive et énergique.
  * Toutes les couleurs/espacements/rayons du site sont pilotés depuis ce fichier.
  */
 
 :root {
     /* Couleurs de base */
-    --color-paper: #FAF7F2;          /* fond général, chaud comme du papier */
-    --color-paper-soft: #F3EEE5;     /* fond secondaire (cartes, sections alternées) */
-    --color-paper-strong: #EAE2D3;   /* bordures douces, séparateurs */
-    --color-ink: #1C1917;            /* texte principal, noir encre */
-    --color-ink-soft: #57534E;       /* texte secondaire */
-    --color-ink-faint: #8A8479;      /* texte tertiaire, placeholders */
+    --color-paper: #FDFBF8;          /* fond général, blanc chaud et lumineux */
+    --color-paper-soft: #F5F1EA;     /* fond secondaire (cartes, sections alternées) */
+    --color-paper-strong: #EBE3D5;   /* bordures douces, séparateurs */
+    --color-ink: #1A1523;            /* texte principal, encre profonde */
+    --color-ink-soft: #55506A;       /* texte secondaire */
+    --color-ink-faint: #8B8598;      /* texte tertiaire, placeholders */
 
-    /* Accent primaire — bordeaux/grenat (CTA, liens, éléments actifs) */
-    --color-primary: #7B2D26;
-    --color-primary-dark: #5E211C;
-    --color-primary-light: #A8493F;
-    --color-primary-tint: #F5E7E5;   /* fond léger sur accent (badges, hover) */
+    /* Accent primaire — rouge vif (CTA, liens, éléments actifs) */
+    --color-primary: #E63946;
+    --color-primary-dark: #C1121F;
+    --color-primary-light: #FF6B6B;
+    --color-primary-tint: #FDE6E6;   /* fond léger sur accent (badges, hover) */
 
-    /* Accent secondaire — doré/ocre (étoiles, promos, mise en valeur) */
-    --color-gold: #B8860B;
-    --color-gold-dark: #8F6708;
-    --color-gold-tint: #FBF1DA;
+    /* Accent secondaire — ambre vif (étoiles, promos, mise en valeur) */
+    --color-gold: #FFB703;
+    --color-gold-dark: #E08E00;
+    --color-gold-tint: #FFF3D6;
+
+    /* Accent tertiaire — sarcelle vive (variété, deals, contrastes) */
+    --color-accent: #06B6A8;
+    --color-accent-dark: #048A80;
+    --color-accent-tint: #DFF7F4;
+
+    /* Dégradés (hero, bandeaux, deal du jour) */
+    --gradient-primary: linear-gradient(135deg, #E63946 0%, #C1121F 55%, #7B1520 100%);
+    --gradient-vivid: linear-gradient(135deg, #E63946 0%, #FFB703 100%);
+    --gradient-ink: linear-gradient(135deg, #1A1523 0%, #2E2440 100%);
 
     /* États sémantiques */
-    --color-success: #3F6B4A;
-    --color-success-tint: #E7F0E9;
-    --color-danger: #A3352B;
-    --color-danger-tint: #FBEAE8;
-    --color-warning: #B8860B;
-    --color-warning-tint: #FBF1DA;
-    --color-info: #2C5F82;
-    --color-info-tint: #E8F1F6;
+    --color-success: #2DA44E;
+    --color-success-tint: #E3F7E9;
+    --color-danger: #E5484D;
+    --color-danger-tint: #FDECEC;
+    --color-warning: #FFB703;
+    --color-warning-tint: #FFF3D6;
+    --color-info: #3B82F6;
+    --color-info-tint: #E9F0FE;
 
     --color-white: #FFFFFF;
-    --color-border: #E4DCC9;
-    --color-overlay: rgba(28, 25, 23, 0.55);
+    --color-border: #E9E1D3;
+    --color-overlay: rgba(26, 21, 35, 0.6);
 
     /* Typographie */
     --font-serif: "Lora", Georgia, "Times New Roman", serif;
@@ -78,9 +88,10 @@
     --radius-full: 999px;
 
     /* Ombres */
-    --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.06);
-    --shadow-md: 0 4px 12px rgba(28, 25, 23, 0.08);
-    --shadow-lg: 0 12px 32px rgba(28, 25, 23, 0.12);
+    --shadow-sm: 0 1px 2px rgba(26, 21, 35, 0.06);
+    --shadow-md: 0 4px 12px rgba(26, 21, 35, 0.10);
+    --shadow-lg: 0 12px 32px rgba(26, 21, 35, 0.16);
+    --shadow-glow: 0 8px 28px rgba(230, 57, 70, 0.28);
 
     /* Layout */
     --container-max: 1280px;
@@ -89,6 +100,7 @@
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-base: 220ms ease;
+    --transition-bounce: 400ms cubic-bezier(.34,1.56,.64,1);
 
     /* Z-index */
     --z-header: 100;

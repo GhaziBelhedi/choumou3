@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\FiltersProducts;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -41,7 +40,6 @@ class CategoryController extends Controller
         return view('products.index', [
             'products' => $products,
             'categories' => Category::active()->orderBy('name')->get(),
-            'publishers' => Publisher::orderBy('name')->get(),
             'currentCategory' => $category,
         ]);
     }

@@ -75,6 +75,10 @@ function initDealCountdown() {
         var minutes = Math.floor((diff % 3600000) / 60000);
         var seconds = Math.floor((diff % 60000) / 1000);
 
+        secondsEl.classList.remove('is-ticking');
+        void secondsEl.offsetWidth; // relance l'animation CSS à chaque tick
+        secondsEl.classList.add('is-ticking');
+
         hoursEl.textContent = pad(hours);
         minutesEl.textContent = pad(minutes);
         secondsEl.textContent = pad(seconds);

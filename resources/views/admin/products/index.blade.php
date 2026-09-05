@@ -35,7 +35,6 @@
                     <th>Titre</th>
                     <th>Type</th>
                     <th>Auteur</th>
-                    <th>Éditeur</th>
                     <th>Prix</th>
                     <th>Stock</th>
                     <th>Avis</th>
@@ -50,7 +49,6 @@
                         <td style="font-weight:600">{{ $product->title }}</td>
                         <td><span class="badge {{ $product->isBook() ? 'badge-primary' : 'badge-info' }}">{{ $product->typeLabel() }}</span></td>
                         <td>{{ $product->author ?? '—' }}</td>
-                        <td>{{ $product->publisher->name ?? '—' }}</td>
                         <td>{{ number_format((float) $product->price, 2) }} DT</td>
                         <td>
                             @if ($product->stock_quantity == 0)
@@ -80,7 +78,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="10" class="text-center text-faint" style="padding:var(--space-8)">Aucun produit.</td></tr>
+                    <tr><td colspan="9" class="text-center text-faint" style="padding:var(--space-8)">Aucun produit.</td></tr>
                 @endforelse
             </tbody>
         </table>

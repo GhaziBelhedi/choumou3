@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Publisher;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -45,8 +44,6 @@ class HomeController extends Controller
 
         $dealProduct = Product::onDeal()->first();
 
-        $publishers = Publisher::withCount('products')->having('products_count', '>', 0)->orderByDesc('products_count')->limit(10)->get();
-
         return view('home', [
             'categories' => $categories,
             'categoryTiles' => $categories->take(4),
@@ -55,7 +52,6 @@ class HomeController extends Controller
             'topRatedProducts' => $topRatedProducts,
             'bestsellersByCategory' => $bestsellersByCategory,
             'dealProduct' => $dealProduct,
-            'publishers' => $publishers,
         ]);
     }
 }

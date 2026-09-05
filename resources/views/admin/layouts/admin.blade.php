@@ -37,7 +37,6 @@
                 <p class="admin-nav__group-label">Catalogue</p>
                 <a href="{{ route('admin.produits.index') }}" class="admin-nav__link {{ request()->routeIs('admin.produits.*') ? 'is-active' : '' }}">📚 Produits</a>
                 <a href="{{ route('admin.categories.index') }}" class="admin-nav__link {{ request()->routeIs('admin.categories.*') ? 'is-active' : '' }}">🏷️ Catégories</a>
-                <a href="{{ route('admin.editeurs.index') }}" class="admin-nav__link {{ request()->routeIs('admin.editeurs.*') ? 'is-active' : '' }}">🏛️ Éditeurs</a>
 
                 <p class="admin-nav__group-label">Ventes</p>
                 <a href="{{ route('admin.orders.index') }}" class="admin-nav__link {{ request()->routeIs('admin.orders.*') ? 'is-active' : '' }}">
@@ -106,7 +105,6 @@
             <a href="{{ route('admin.dashboard') }}" class="mobile-menu__link">Tableau de bord</a>
             <a href="{{ route('admin.produits.index') }}" class="mobile-menu__link">Produits</a>
             <a href="{{ route('admin.categories.index') }}" class="mobile-menu__link">Catégories</a>
-            <a href="{{ route('admin.editeurs.index') }}" class="mobile-menu__link">Éditeurs</a>
             <a href="{{ route('admin.orders.index') }}" class="mobile-menu__link">Commandes</a>
             <a href="{{ route('admin.coupons.index') }}" class="mobile-menu__link">Coupons</a>
             <a href="{{ route('admin.reviews.index') }}" class="mobile-menu__link">Avis</a>

@@ -54,16 +54,6 @@
     </div>
 
     <div class="field">
-        <label class="field__label" for="publisher_id">Éditeur</label>
-        <select class="select" id="publisher_id" name="publisher_id">
-            <option value="">— Aucun —</option>
-            @foreach ($publishers as $publisher)
-                <option value="{{ $publisher->id }}" @selected(old('publisher_id', $product->publisher_id ?? null) == $publisher->id)>{{ $publisher->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="field">
         <label class="field__label" for="publication_date">Date de publication</label>
         <input class="input" type="date" id="publication_date" name="publication_date" value="{{ old('publication_date', optional($product?->publication_date)->format('Y-m-d')) }}">
     </div>

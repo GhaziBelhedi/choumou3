@@ -208,21 +208,7 @@
         </div>
     </section>
 
-    {{-- ============ 8. Éditeurs partenaires ============ --}}
-    @if ($publishers->isNotEmpty())
-        <section class="section" style="background:var(--color-paper-soft)" data-reveal>
-            <div class="container">
-                <h2 class="section-title" style="text-align:center">Nos éditeurs</h2>
-                <div class="publisher-strip">
-                    @foreach ($publishers as $publisher)
-                        <span class="publisher-chip">{{ $publisher->name }}</span>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- ============ 9. Colonnes compactes ============ --}}
+    {{-- ============ 8. Colonnes compactes ============ --}}
     <section class="section" data-reveal>
         <div class="container">
             <div class="grid grid-3">
@@ -270,7 +256,7 @@
         </div>
     </section>
 
-    {{-- ============ 10. Newsletter ============ --}}
+    {{-- ============ 9. Newsletter ============ --}}
     <section class="newsletter-section" data-reveal>
         <div class="container newsletter-section__inner">
             <div>

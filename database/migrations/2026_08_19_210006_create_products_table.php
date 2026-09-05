@@ -18,7 +18,6 @@ return new class extends Migration
             $table->longText('description');
             $table->enum('language', ['fr', 'ar', 'en'])->nullable();
             $table->unsignedInteger('pages')->nullable();
-            $table->foreignId('publisher_id')->nullable()->constrained('publishers')->nullOnDelete();
             $table->date('publication_date')->nullable();
             $table->decimal('price', 8, 2);
             $table->decimal('compare_at_price', 8, 2)->nullable();

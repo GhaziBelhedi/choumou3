@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 trait FiltersProducts
 {
     /**
-     * Applique les filtres (type, catégorie, langue, éditeur, prix, recherche) à la requête.
+     * Applique les filtres (type, catégorie, langue, prix, recherche) à la requête.
      */
     protected function applyFilters(Builder $query, Request $request): void
     {
@@ -26,10 +26,6 @@ trait FiltersProducts
 
         if ($language = $request->string('langue')->toString()) {
             $query->where('language', $language);
-        }
-
-        if ($publisherSlug = $request->string('editeur')->toString()) {
-            $query->whereHas('publisher', fn ($q2) => $q2->where('slug', $publisherSlug));
         }
 
         if ($request->filled('prix_min')) {

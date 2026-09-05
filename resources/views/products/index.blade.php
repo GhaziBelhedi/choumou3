@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            @if (request()->anyFilled(['q', 'type', 'categorie', 'langue', 'editeur', 'prix_min', 'prix_max']))
+            @if (request()->anyFilled(['q', 'type', 'categorie', 'langue', 'prix_min', 'prix_max']))
                 <div class="active-filters">
                     @if ($q = request('q'))
                         <span class="active-filter-chip">Recherche : "{{ $q }}"</span>
@@ -90,9 +90,6 @@
                     @endif
                     @if ($lang = request('langue'))
                         <span class="active-filter-chip">{{ ['fr' => 'Français', 'ar' => 'Arabe', 'en' => 'Anglais'][$lang] ?? $lang }}</span>
-                    @endif
-                    @if ($pub = request('editeur'))
-                        <span class="active-filter-chip">{{ $publishers->firstWhere('slug', $pub)?->name ?? $pub }}</span>
                     @endif
                     <a href="{{ $currentCategory ? route('categories.show', $currentCategory->slug) : route('products.index') }}" class="active-filter-chip" style="background:var(--color-paper-soft);color:var(--color-ink-soft)">
                         Réinitialiser ✕
