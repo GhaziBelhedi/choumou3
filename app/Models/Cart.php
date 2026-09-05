@@ -28,8 +28,8 @@ class Cart extends Model
     public function subtotal(): float
     {
         return (float) $this->items()
-            ->join('books', 'books.id', '=', 'cart_items.book_id')
-            ->selectRaw('SUM(books.price * cart_items.quantity) as total')
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->selectRaw('SUM(products.price * cart_items.quantity) as total')
             ->value('total') ?? 0.0;
     }
 }

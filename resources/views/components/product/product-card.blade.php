@@ -1,32 +1,32 @@
-@props(['book'])
+@props(['product'])
 
 @php
     static $wishlistedIds = null;
 
     if (auth()->check()) {
         if ($wishlistedIds === null) {
-            $wishlistedIds = auth()->user()->wishlists()->pluck('book_id')->all();
+            $wishlistedIds = auth()->user()->wishlists()->pluck('product_id')->all();
         }
-        $isWishlisted = in_array($book->id, $wishlistedIds, true);
+        $isWishlisted = in_array($product->id, $wishlistedIds, true);
     } else {
         $isWishlisted = false;
     }
 @endphp
 
-<article class="product-card" data-book-id="{{ $book->id }}">
+<article class="product-card" data-product-id="{{ $product->id }}">
     <div class="product-card__thumb-wrap">
-        <a href="{{ route('books.show', $book->slug) }}" class="product-card__thumb">
-            <img src="{{ $book->coverUrl() }}" alt="Couverture de {{ $book->title }}" loading="lazy">
+        <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb">
+            <img src="{{ $product->coverUrl() }}" alt="Couverture de {{ $product->title }}" loading="lazy">
         </a>
 
-        @if ($book->isOnSale())
-            <span class="badge badge-primary product-card__badge">-{{ $book->discountPercent() }}%</span>
-        @elseif ($book->is_featured)
+        @if ($product->isOnSale())
+            <span class="badge badge-primary product-card__badge">-{{ $product->discountPercent() }}%</span>
+        @elseif ($product->is_featured)
             <span class="badge badge-gold product-card__badge">Coup de cœur</span>
         @endif
 
         @auth
-            <form method="POST" action="{{ route('wishlist.toggle', $book) }}" class="product-card__wishlist-form" data-wishlist-form>
+            <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="product-card__wishlist-form" data-wishlist-form>
                 @csrf
                 <button
                     type="submit"
@@ -45,22 +45,24 @@
     </div>
 
     <div class="product-card__body">
-        <p class="text-faint" style="font-size:var(--text-xs);margin-bottom:var(--space-1)">{{ $book->author }}</p>
+        <p class="text-faint" style="font-size:var(--text-xs);margin-bottom:var(--space-1)">
+            {{ $product->isBook() ? $product->author : 'Fourniture scolaire' }}
+        </p>
         <h3 class="product-card__title">
-            <a href="{{ route('books.show', $book->slug) }}">{{ $book->title }}</a>
+            <a href="{{ route('products.show', $product->slug) }}">{{ $product->title }}</a>
         </h3>
 
-        <x-product.rating-stars :rating="$book->average_rating" :count="$book->reviews_count" />
+        <x-product.rating-stars :rating="$product->average_rating" :count="$product->reviews_count" />
 
         <div class="flex-between" style="margin-top:var(--space-3)">
-            <x-product.price-tag :book="$book" size="sm" />
+            <x-product.price-tag :product="$product" size="sm" />
 
-            @if ($book->stock_quantity > 0)
+            @if ($product->stock_quantity > 0)
                 <form method="POST" action="{{ route('cart.store') }}" data-add-to-cart-form>
                     @csrf
-                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="product-card__add-btn" aria-label="Ajouter « {{ $book->title }} » au panier">
+                    <button type="submit" class="product-card__add-btn" aria-label="Ajouter « {{ $product->title }} » au panier">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"/></svg>
                     </button>
                 </form>

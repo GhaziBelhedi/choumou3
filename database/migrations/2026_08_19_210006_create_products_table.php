@@ -8,14 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->enum('type', ['livre', 'fourniture'])->default('livre');
             $table->string('title', 255);
             $table->string('slug', 280)->unique();
-            $table->string('author', 150);
+            $table->string('author', 150)->nullable();
             $table->string('isbn', 20)->nullable()->unique();
             $table->longText('description');
-            $table->enum('language', ['fr', 'ar', 'en'])->default('fr');
+            $table->enum('language', ['fr', 'ar', 'en'])->nullable();
             $table->unsignedInteger('pages')->nullable();
             $table->foreignId('publisher_id')->nullable()->constrained('publishers')->nullOnDelete();
             $table->date('publication_date')->nullable();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->string('cover_path')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->timestamp('deal_ends_at')->nullable();
             $table->unsignedInteger('sales_count')->default(0);
             $table->decimal('average_rating', 3, 2)->default(0);
             $table->unsignedInteger('reviews_count')->default(0);
@@ -38,6 +40,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('products');
     }
 };

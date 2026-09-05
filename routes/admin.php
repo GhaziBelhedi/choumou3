@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GovernorateController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SettingController;
@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::resource('livres', BookController::class)->parameters(['livres' => 'book']);
-Route::delete('/livres-images/{image}', [BookController::class, 'destroyImage'])->name('livres.images.destroy');
+Route::resource('produits', ProductController::class)->parameters(['produits' => 'product']);
+Route::delete('/produits-images/{image}', [ProductController::class, 'destroyImage'])->name('produits.images.destroy');
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'category']);
 Route::resource('editeurs', PublisherController::class)->parameters(['editeurs' => 'publisher']);
 Route::resource('coupons', CouponController::class);

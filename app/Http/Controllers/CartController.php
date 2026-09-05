@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use App\Models\CartItem;
+use App\Models\Product;
 use App\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +19,7 @@ class CartController extends Controller
     public function index(): View
     {
         $cart = $this->cartService->currentCart();
-        $cart->load('items.book');
+        $cart->load('items.product');
         $totals = $this->cartService->totals();
 
         return view('cart.index', [
@@ -31,19 +31,19 @@ class CartController extends Controller
     public function store(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validate([
-            'book_id' => ['required', 'exists:books,id'],
+            'product_id' => ['required', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        $book = Book::active()->findOrFail($data['book_id']);
+        $product = Product::active()->findOrFail($data['product_id']);
 
-        if ($book->stock_quantity < 1) {
-            return $this->respond($request, false, 'Ce livre est actuellement en rupture de stock.');
+        if ($product->stock_quantity < 1) {
+            return $this->respond($request, false, 'Ce produit est actuellement en rupture de stock.');
         }
 
-        $this->cartService->addItem($book, $data['quantity'] ?? 1);
+        $this->cartService->addItem($product, $data['quantity'] ?? 1);
 
-        return $this->respond($request, true, "« {$book->title} » a été ajouté au panier.");
+        return $this->respond($request, true, "« {$product->title} » a été ajouté au panier.");
     }
 
     public function update(Request $request, CartItem $item): RedirectResponse|JsonResponse

@@ -31,9 +31,9 @@
                     @foreach ($cart->items as $item)
                         <div class="flex-between" style="padding-block:var(--space-3);border-bottom:1px solid var(--color-border)">
                             <div class="flex" style="gap:var(--space-3)">
-                                <img src="{{ $item->book->coverUrl() }}" alt="Couverture de {{ $item->book->title }}" loading="lazy" style="width:44px;height:62px;object-fit:cover;border-radius:var(--radius-sm)">
+                                <img src="{{ $item->product->coverUrl() }}" alt="Couverture de {{ $item->product->title }}" loading="lazy" style="width:44px;height:62px;object-fit:cover;border-radius:var(--radius-sm)">
                                 <div>
-                                    <p style="font-weight:600;font-size:var(--text-sm)">{{ $item->book->title }}</p>
+                                    <p style="font-weight:600;font-size:var(--text-sm)">{{ $item->product->title }}</p>
                                     <p class="text-faint" style="font-size:var(--text-xs)">Qté : {{ $item->quantity }}</p>
                                 </div>
                             </div>

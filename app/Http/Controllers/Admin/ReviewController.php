@@ -15,7 +15,7 @@ class ReviewController extends Controller
     {
         $status = $request->string('status', 'pending')->toString();
 
-        $query = Review::query()->with(['book', 'user']);
+        $query = Review::query()->with(['product', 'user']);
 
         match ($status) {
             'approved' => $query->where('is_approved', true),
@@ -31,7 +31,7 @@ class ReviewController extends Controller
     public function approve(Review $review): RedirectResponse
     {
         $review->update(['is_approved' => true]);
-        $review->book->recalculateRatingStats();
+        $review->product->recalculateRatingStats();
         $review->user->notify(new ReviewApproved($review));
 
         return back()->with('success', 'Avis approuvé et publié.');
@@ -40,16 +40,16 @@ class ReviewController extends Controller
     public function reject(Review $review): RedirectResponse
     {
         $review->update(['is_approved' => false]);
-        $review->book->recalculateRatingStats();
+        $review->product->recalculateRatingStats();
 
         return back()->with('success', 'Avis rejeté (masqué du site).');
     }
 
     public function destroy(Review $review): RedirectResponse
     {
-        $book = $review->book;
+        $product = $review->product;
         $review->delete();
-        $book->recalculateRatingStats();
+        $product->recalculateRatingStats();
 
         return back()->with('success', 'Avis supprimé.');
     }

@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['book_id', 'path', 'position'])]
-class BookImage extends Model
+#[Fillable(['product_id', 'path', 'position'])]
+class ProductImage extends Model
 {
-    public function book(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function url(): string

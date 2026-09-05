@@ -23,7 +23,7 @@
                     <h2 style="font-family:var(--font-serif);font-size:var(--text-lg);margin-bottom:var(--space-4)">Articles</h2>
                     @foreach ($order->items as $item)
                         <div class="flex-between" style="padding-block:var(--space-3);border-bottom:1px solid var(--color-border);font-size:var(--text-sm)">
-                            <span>{{ $item->book_title_snapshot }} × {{ $item->quantity }}</span>
+                            <span>{{ $item->product_title_snapshot }} × {{ $item->quantity }}</span>
                             <span style="font-weight:600">{{ number_format((float) $item->subtotal, 2) }} DT</span>
                         </div>
                     @endforeach

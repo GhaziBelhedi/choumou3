@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['name', 'slug', 'logo_path'])]
 class Publisher extends Model
 {
-    public function books(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Product::class);
     }
 }

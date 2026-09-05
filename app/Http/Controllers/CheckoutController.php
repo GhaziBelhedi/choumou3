@@ -75,7 +75,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Votre panier est vide.');
         }
 
-        $cart->load('items.book');
+        $cart->load('items.product');
         $governorate = Governorate::findOrFail($address['governorate_id']);
         $totals = $this->cartService->totals($governorate);
 
@@ -93,15 +93,15 @@ class CheckoutController extends Controller
         abort_unless($address, 400, "L'adresse de livraison est manquante.");
 
         $cart = $this->cartService->currentCart();
-        $cart->load('items.book');
+        $cart->load('items.product');
         abort_if($cart->items->isEmpty(), 400, 'Votre panier est vide.');
 
         $request->validate(['customer_notes' => ['nullable', 'string', 'max:500']]);
 
         foreach ($cart->items as $item) {
-            if ($item->quantity > $item->book->stock_quantity) {
+            if ($item->quantity > $item->product->stock_quantity) {
                 return redirect()->route('cart.index')
-                    ->with('error', "Stock insuffisant pour \"{$item->book->title}\" — merci d'ajuster la quantité.");
+                    ->with('error', "Stock insuffisant pour \"{$item->product->title}\" — merci d'ajuster la quantité.");
             }
         }
 
@@ -129,16 +129,16 @@ class CheckoutController extends Controller
 
             foreach ($cart->items as $item) {
                 $order->items()->create([
-                    'book_id' => $item->book_id,
-                    'book_title_snapshot' => $item->book->title,
-                    'book_isbn_snapshot' => $item->book->isbn,
-                    'unit_price' => $item->book->price,
+                    'product_id' => $item->product_id,
+                    'product_title_snapshot' => $item->product->title,
+                    'product_isbn_snapshot' => $item->product->isbn,
+                    'unit_price' => $item->product->price,
                     'quantity' => $item->quantity,
-                    'subtotal' => $item->book->price * $item->quantity,
+                    'subtotal' => $item->product->price * $item->quantity,
                 ]);
 
-                $item->book->decrement('stock_quantity', $item->quantity);
-                $item->book->increment('sales_count', $item->quantity);
+                $item->product->decrement('stock_quantity', $item->quantity);
+                $item->product->increment('sales_count', $item->quantity);
             }
 
             $order->statusHistory()->create([

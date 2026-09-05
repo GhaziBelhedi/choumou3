@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\BookFactory;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,14 +12,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
-    'title', 'slug', 'author', 'isbn', 'description', 'language', 'pages',
+    'type', 'title', 'slug', 'author', 'isbn', 'description', 'language', 'pages',
     'publisher_id', 'publication_date', 'price', 'compare_at_price',
     'stock_quantity', 'sku', 'cover_path', 'is_featured', 'is_active', 'deal_ends_at',
 ])]
-class Book extends Model
+class Product extends Model
 {
-    /** @use HasFactory<BookFactory> */
+    /** @use HasFactory<ProductFactory> */
     use HasFactory, SoftDeletes;
+
+    public const TYPES = [
+        'livre' => 'Livre',
+        'fourniture' => 'Fourniture scolaire',
+    ];
 
     protected function casts(): array
     {
@@ -41,12 +46,12 @@ class Book extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'book_category');
+        return $this->belongsToMany(Category::class, 'product_category');
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(BookImage::class)->orderBy('position');
+        return $this->hasMany(ProductImage::class)->orderBy('position');
     }
 
     public function reviews(): HasMany
@@ -79,8 +84,18 @@ class Book extends Model
         return $query->where('is_featured', true);
     }
 
+    public function scopeBooks($query)
+    {
+        return $query->where('type', 'livre');
+    }
+
+    public function scopeSupplies($query)
+    {
+        return $query->where('type', 'fourniture');
+    }
+
     /**
-     * Livres actuellement "en deal" (mise en avant avec compte à rebours), triés
+     * Produits actuellement "en deal" (mise en avant avec compte à rebours), triés
      * par échéance la plus proche — le premier résultat est LE deal du jour affiché en home.
      */
     public function scopeOnDeal($query)
@@ -91,6 +106,16 @@ class Book extends Model
     public function isDealActive(): bool
     {
         return $this->deal_ends_at !== null && $this->deal_ends_at->isFuture();
+    }
+
+    public function isBook(): bool
+    {
+        return $this->type === 'livre';
+    }
+
+    public function typeLabel(): string
+    {
+        return self::TYPES[$this->type] ?? $this->type;
     }
 
     /**
@@ -109,8 +134,8 @@ class Book extends Model
     }
 
     /**
-     * Les routes {book} (wishlist, avis...) résolvent le modèle par slug, pas par id,
-     * pour rester cohérent avec les URLs du catalogue (/livres/{slug}).
+     * Les routes {product} (wishlist, avis...) résolvent le modèle par slug, pas par id,
+     * pour rester cohérent avec les URLs du catalogue (/produits/{slug}).
      */
     public function getRouteKeyName(): string
     {
@@ -133,7 +158,7 @@ class Book extends Model
 
     /**
      * Recalcule average_rating / reviews_count à partir des avis approuvés.
-     * Appelé quand un avis est approuvé/rejeté/supprimé (back-office, Phase 5).
+     * Appelé quand un avis est approuvé/rejeté/supprimé (back-office).
      */
     public function recalculateRatingStats(): void
     {
@@ -152,6 +177,6 @@ class Book extends Model
     {
         return $this->cover_path
             ? asset('storage/'.$this->cover_path)
-            : asset('assets/images/book-placeholder.svg');
+            : asset('assets/images/product-placeholder.svg');
     }
 }

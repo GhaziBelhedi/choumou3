@@ -28,9 +28,9 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function books(): BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'book_category');
+        return $this->belongsToMany(Product::class, 'product_category');
     }
 
     public function scopeActive($query)

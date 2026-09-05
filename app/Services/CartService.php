@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Book;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Governorate;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -48,12 +48,12 @@ class CartService
         return Cart::firstOrCreate(['session_id' => $token]);
     }
 
-    public function addItem(Book $book, int $quantity = 1): CartItem
+    public function addItem(Product $product, int $quantity = 1): CartItem
     {
         $cart = $this->currentCart();
 
-        $item = $cart->items()->firstOrNew(['book_id' => $book->id]);
-        $item->quantity = min($book->stock_quantity, ($item->quantity ?? 0) + $quantity);
+        $item = $cart->items()->firstOrNew(['product_id' => $product->id]);
+        $item->quantity = min($product->stock_quantity, ($item->quantity ?? 0) + $quantity);
         $item->save();
 
         return $item;
@@ -61,7 +61,7 @@ class CartService
 
     public function updateItem(CartItem $item, int $quantity): void
     {
-        $item->update(['quantity' => min($quantity, $item->book->stock_quantity)]);
+        $item->update(['quantity' => min($quantity, $item->product->stock_quantity)]);
     }
 
     public function removeItem(CartItem $item): void
@@ -89,15 +89,15 @@ class CartService
         $userCart = Cart::firstOrCreate(['user_id' => $user->id]);
 
         foreach ($guestCart->items as $guestItem) {
-            $existing = $userCart->items()->where('book_id', $guestItem->book_id)->first();
+            $existing = $userCart->items()->where('product_id', $guestItem->product_id)->first();
 
             if ($existing) {
                 $existing->update([
-                    'quantity' => min($existing->quantity + $guestItem->quantity, $guestItem->book->stock_quantity),
+                    'quantity' => min($existing->quantity + $guestItem->quantity, $guestItem->product->stock_quantity),
                 ]);
             } else {
                 $userCart->items()->create([
-                    'book_id' => $guestItem->book_id,
+                    'product_id' => $guestItem->product_id,
                     'quantity' => $guestItem->quantity,
                 ]);
             }

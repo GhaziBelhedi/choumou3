@@ -35,7 +35,7 @@
                 </a>
 
                 <p class="admin-nav__group-label">Catalogue</p>
-                <a href="{{ route('admin.livres.index') }}" class="admin-nav__link {{ request()->routeIs('admin.livres.*') ? 'is-active' : '' }}">📚 Livres</a>
+                <a href="{{ route('admin.produits.index') }}" class="admin-nav__link {{ request()->routeIs('admin.produits.*') ? 'is-active' : '' }}">📚 Produits</a>
                 <a href="{{ route('admin.categories.index') }}" class="admin-nav__link {{ request()->routeIs('admin.categories.*') ? 'is-active' : '' }}">🏷️ Catégories</a>
                 <a href="{{ route('admin.editeurs.index') }}" class="admin-nav__link {{ request()->routeIs('admin.editeurs.*') ? 'is-active' : '' }}">🏛️ Éditeurs</a>
 
@@ -104,7 +104,7 @@
                 <button type="button" class="icon-btn" data-menu-close aria-label="Fermer">✕</button>
             </div>
             <a href="{{ route('admin.dashboard') }}" class="mobile-menu__link">Tableau de bord</a>
-            <a href="{{ route('admin.livres.index') }}" class="mobile-menu__link">Livres</a>
+            <a href="{{ route('admin.produits.index') }}" class="mobile-menu__link">Produits</a>
             <a href="{{ route('admin.categories.index') }}" class="mobile-menu__link">Catégories</a>
             <a href="{{ route('admin.editeurs.index') }}" class="mobile-menu__link">Éditeurs</a>
             <a href="{{ route('admin.orders.index') }}" class="mobile-menu__link">Commandes</a>

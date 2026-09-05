@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_id')->constrained('books')->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->unsignedTinyInteger('rating');
             $table->string('title', 150)->nullable();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('is_verified_purchase')->default(false);
             $table->timestamps();
 
-            $table->unique(['book_id', 'user_id']);
+            $table->unique(['product_id', 'user_id']);
         });
     }
 

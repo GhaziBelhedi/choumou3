@@ -21,6 +21,7 @@ class CategorySeeder extends Seeder
             'Livres en arabe',
             'Cuisine',
             'Histoire & Géographie',
+            'Fournitures scolaires',
         ];
 
         foreach ($categories as $name) {

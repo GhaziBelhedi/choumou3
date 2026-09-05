@@ -23,7 +23,7 @@
 
             @foreach ($order->items as $item)
                 <div class="flex-between" style="padding-block:var(--space-2);border-bottom:1px solid var(--color-border);font-size:var(--text-sm)">
-                    <span>{{ $item->book_title_snapshot }} × {{ $item->quantity }}</span>
+                    <span>{{ $item->product_title_snapshot }} × {{ $item->quantity }}</span>
                     <span>{{ number_format($item->subtotal, 2) }} DT</span>
                 </div>
             @endforeach

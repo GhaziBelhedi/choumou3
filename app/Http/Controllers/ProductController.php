@@ -2,45 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\FiltersBooks;
-use App\Models\Book;
+use App\Http\Controllers\Concerns\FiltersProducts;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class BookController extends Controller
+class ProductController extends Controller
 {
-    use FiltersBooks;
+    use FiltersProducts;
 
     public function index(Request $request): View
     {
-        $query = Book::query()->active();
+        $query = Product::query()->active();
 
         $this->applyFilters($query, $request);
         $this->applySort($query, $request->string('tri', 'nouveautes')->toString());
 
-        $books = $query->paginate(24)->withQueryString();
+        $products = $query->paginate(24)->withQueryString();
 
-        return view('books.index', [
-            'books' => $books,
+        return view('products.index', [
+            'products' => $products,
             'categories' => Category::active()->orderBy('name')->get(),
             'publishers' => Publisher::orderBy('name')->get(),
             'currentCategory' => null,
         ]);
     }
 
+    /**
+     * Alias pratique /livres — catalogue pré-filtré sur les livres.
+     */
+    public function books(Request $request): View
+    {
+        $request->merge(['type' => 'livre']);
+
+        return $this->index($request);
+    }
+
+    /**
+     * Alias pratique /fournitures-scolaires — catalogue pré-filtré sur les fournitures.
+     */
+    public function supplies(Request $request): View
+    {
+        $request->merge(['type' => 'fourniture']);
+
+        return $this->index($request);
+    }
+
     public function show(string $slug): View
     {
-        $book = Book::active()
+        $product = Product::active()
             ->with(['publisher', 'categories', 'images', 'approvedReviews.user'])
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $categoryIds = $book->categories->pluck('id');
+        $categoryIds = $product->categories->pluck('id');
 
-        $similarBooks = Book::active()
-            ->where('id', '!=', $book->id)
+        $similarProducts = Product::active()
+            ->where('id', '!=', $product->id)
+            ->where('type', $product->type)
             ->when($categoryIds->isNotEmpty(), fn ($q) => $q->whereHas(
                 'categories',
                 fn ($q2) => $q2->whereIn('categories.id', $categoryIds)
@@ -49,9 +70,9 @@ class BookController extends Controller
             ->limit(4)
             ->get();
 
-        return view('books.show', [
-            'book' => $book,
-            'similarBooks' => $similarBooks,
+        return view('products.show', [
+            'product' => $product,
+            'similarProducts' => $similarProducts,
         ]);
     }
 
@@ -64,10 +85,10 @@ class BookController extends Controller
         $ids = array_filter(array_map('intval', explode(',', (string) $request->query('ids'))));
         $ids = array_slice($ids, 0, 8);
 
-        $books = empty($ids)
+        $products = empty($ids)
             ? collect()
-            : Book::active()->whereIn('id', $ids)->get()->sortBy(fn ($book) => array_search($book->id, $ids))->values();
+            : Product::active()->whereIn('id', $ids)->get()->sortBy(fn ($p) => array_search($p->id, $ids))->values();
 
-        return view('books.partials.recently-viewed-cards', compact('books'));
+        return view('products.partials.recently-viewed-cards', compact('products'));
     }
 }

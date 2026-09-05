@@ -14,6 +14,20 @@
     </div>
 
     <div class="filter-group">
+        <p class="filter-group__title">Type de produit</p>
+        <label class="filter-option">
+            <input type="radio" name="type" value="" @checked(! request('type'))>
+            Tout
+        </label>
+        @foreach (\App\Models\Product::TYPES as $value => $label)
+            <label class="filter-option">
+                <input type="radio" name="type" value="{{ $value }}" @checked(request('type') === $value)>
+                {{ $label }}
+            </label>
+        @endforeach
+    </div>
+
+    <div class="filter-group">
         <p class="filter-group__title">Catégorie</p>
         <label class="filter-option">
             <input type="radio" name="categorie" value="" @checked(! request('categorie'))>

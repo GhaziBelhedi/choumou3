@@ -16,7 +16,7 @@
                     <tr>
                         <td style="font-weight:600">{{ $category->name }}</td>
                         <td>{{ $category->parent->name ?? '—' }}</td>
-                        <td>{{ $category->books_count }}</td>
+                        <td>{{ $category->products_count }}</td>
                         <td>
                             @if ($category->is_active)
                                 <span class="badge badge-success">Active</span>

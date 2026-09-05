@@ -25,8 +25,8 @@ class ReviewApproved extends Notification
         return (new MailMessage)
             ->subject('Votre avis a été publié')
             ->greeting('Bonjour '.$notifiable->name.',')
-            ->line('Votre avis sur « '.$this->review->book->title.' » a été validé et est maintenant visible.')
-            ->action('Voir le livre', route('books.show', $this->review->book->slug))
+            ->line('Votre avis sur « '.$this->review->product->title.' » a été validé et est maintenant visible.')
+            ->action('Voir le produit', route('products.show', $this->review->product->slug))
             ->line('Merci pour votre contribution !');
     }
 
@@ -35,9 +35,9 @@ class ReviewApproved extends Notification
         return [
             'type' => 'review_approved',
             'review_id' => $this->review->id,
-            'book_id' => $this->review->book_id,
-            'book_title' => $this->review->book->title,
-            'book_slug' => $this->review->book->slug,
+            'product_id' => $this->review->product_id,
+            'product_title' => $this->review->product->title,
+            'product_slug' => $this->review->product->slug,
         ];
     }
 }

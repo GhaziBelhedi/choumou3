@@ -29,11 +29,11 @@
         </div>
         <div class="stat-card">
             <p class="stat-card__label">Stock faible (≤ 5)</p>
-            <p class="stat-card__value {{ $lowStockBooks > 0 ? 'is-warning' : '' }}">{{ $lowStockBooks }}</p>
+            <p class="stat-card__value {{ $lowStockProducts > 0 ? 'is-warning' : '' }}">{{ $lowStockProducts }}</p>
         </div>
         <div class="stat-card">
             <p class="stat-card__label">Ruptures de stock</p>
-            <p class="stat-card__value {{ $outOfStockBooks > 0 ? 'is-warning' : '' }}">{{ $outOfStockBooks }}</p>
+            <p class="stat-card__value {{ $outOfStockProducts > 0 ? 'is-warning' : '' }}">{{ $outOfStockProducts }}</p>
         </div>
     </div>
 
@@ -66,10 +66,10 @@
 
         <div class="card">
             <h2 style="font-family:var(--font-serif);font-size:var(--text-lg);margin-bottom:var(--space-4)">Meilleures ventes</h2>
-            @foreach ($topBooks as $book)
+            @foreach ($topProducts as $product)
                 <div class="flex-between" style="padding-block:var(--space-2);border-bottom:1px solid var(--color-border);font-size:var(--text-sm)">
-                    <span>{{ $book->title }}</span>
-                    <span class="text-faint">{{ $book->sales_count }} vendus</span>
+                    <span>{{ $product->title }}</span>
+                    <span class="text-faint">{{ $product->sales_count }} vendus</span>
                 </div>
             @endforeach
         </div>

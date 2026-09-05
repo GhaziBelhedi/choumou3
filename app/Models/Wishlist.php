@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'book_id'])]
+#[Fillable(['user_id', 'product_id'])]
 class Wishlist extends Model
 {
     public function user(): BelongsTo
@@ -14,8 +14,8 @@ class Wishlist extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function book(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Product::class);
     }
 }

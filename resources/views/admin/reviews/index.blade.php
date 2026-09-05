@@ -20,7 +20,7 @@
             <div class="card" style="margin-bottom:var(--space-4)">
                 <div class="flex-between" style="margin-bottom:var(--space-2)">
                     <div>
-                        <a href="{{ route('books.show', $review->book->slug) }}" target="_blank" style="font-weight:600">{{ $review->book->title }}</a>
+                        <a href="{{ route('products.show', $review->product->slug) }}" target="_blank" style="font-weight:600">{{ $review->product->title }}</a>
                         <p class="text-faint" style="font-size:var(--text-xs)">par {{ $review->user->name }} · {{ $review->created_at->format('d/m/Y') }} @if($review->is_verified_purchase) · <span class="text-primary">Achat vérifié</span> @endif</p>
                     </div>
                     <x-product.rating-stars :rating="$review->rating" :size="16" />

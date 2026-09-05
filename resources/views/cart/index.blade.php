@@ -20,7 +20,7 @@
             <div class="empty-state">
                 <h3>Votre panier est vide</h3>
                 <p style="margin-bottom:var(--space-6)">Parcourez notre catalogue pour trouver votre prochaine lecture.</p>
-                <a href="{{ route('books.index') }}" class="btn btn-primary">Voir le catalogue</a>
+                <a href="{{ route('products.index') }}" class="btn btn-primary">Voir le catalogue</a>
             </div>
         @else
             <div class="grid" style="grid-template-columns:1fr;gap:var(--space-8)">
@@ -29,7 +29,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Livre</th>
+                                    <th>Produit</th>
                                     <th>Prix unitaire</th>
                                     <th>Quantité</th>
                                     <th>Sous-total</th>
@@ -41,21 +41,21 @@
                                     <tr data-cart-row>
                                         <td>
                                             <div class="flex" style="gap:var(--space-3)">
-                                                <img src="{{ $item->book->coverUrl() }}" alt="Couverture de {{ $item->book->title }}" loading="lazy" style="width:48px;height:68px;object-fit:cover;border-radius:var(--radius-sm)">
+                                                <img src="{{ $item->product->coverUrl() }}" alt="Couverture de {{ $item->product->title }}" loading="lazy" style="width:48px;height:68px;object-fit:cover;border-radius:var(--radius-sm)">
                                                 <div>
-                                                    <a href="{{ route('books.show', $item->book->slug) }}" style="font-weight:600">{{ $item->book->title }}</a>
-                                                    <p class="text-faint" style="font-size:var(--text-xs)">{{ $item->book->author }}</p>
+                                                    <a href="{{ route('products.show', $item->product->slug) }}" style="font-weight:600">{{ $item->product->title }}</a>
+                                                    <p class="text-faint" style="font-size:var(--text-xs)">{{ $item->product->isBook() ? $item->product->author : 'Fourniture scolaire' }}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{{ number_format((float) $item->book->price, 2) }} DT</td>
+                                        <td>{{ number_format((float) $item->product->price, 2) }} DT</td>
                                         <td>
                                             <form method="POST" action="{{ route('cart.update', $item) }}" data-cart-update-form>
                                                 @csrf
                                                 @method('PATCH')
                                                 <div class="qty-stepper" data-qty-stepper data-auto-submit>
                                                     <button type="button" data-qty-decrement aria-label="Diminuer">−</button>
-                                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->book->stock_quantity }}">
+                                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock_quantity }}">
                                                     <button type="button" data-qty-increment aria-label="Augmenter">+</button>
                                                 </div>
                                             </form>

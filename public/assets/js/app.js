@@ -211,3 +211,27 @@ window.requestJSON = function (url, method, data) {
 window.postJSON = function (url, data) {
     return window.requestJSON(url, 'POST', data);
 };
+
+/* ---------- Historique "consultés récemment" (localStorage, pas de session serveur) ---------- */
+var RECENTLY_VIEWED_KEY = 'choumou3_recently_viewed';
+var RECENTLY_VIEWED_MAX = 8;
+
+window.trackRecentlyViewed = function (productId) {
+    try {
+        var ids = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
+        ids = ids.filter(function (id) { return id !== productId; });
+        ids.unshift(productId);
+        ids = ids.slice(0, RECENTLY_VIEWED_MAX);
+        localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(ids));
+    } catch (e) {
+        // localStorage indisponible (navigation privée stricte...) — on ignore silencieusement.
+    }
+};
+
+window.getRecentlyViewedIds = function () {
+    try {
+        return JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
+    } catch (e) {
+        return [];
+    }
+};

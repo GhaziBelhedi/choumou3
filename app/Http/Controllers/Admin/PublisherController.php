@@ -15,7 +15,7 @@ class PublisherController extends Controller
 
     public function index(): View
     {
-        $publishers = Publisher::withCount('books')->orderBy('name')->paginate(20);
+        $publishers = Publisher::withCount('products')->orderBy('name')->paginate(20);
 
         return view('admin.publishers.index', compact('publishers'));
     }
@@ -55,8 +55,8 @@ class PublisherController extends Controller
 
     public function destroy(Publisher $publisher): RedirectResponse
     {
-        if ($publisher->books()->exists()) {
-            return back()->with('error', 'Impossible de supprimer : des livres sont encore rattachés à cet éditeur.');
+        if ($publisher->products()->exists()) {
+            return back()->with('error', 'Impossible de supprimer : des produits sont encore rattachés à cet éditeur.');
         }
 
         $publisher->delete();

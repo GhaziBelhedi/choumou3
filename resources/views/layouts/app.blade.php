@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'Librairie'))</title>
-    <meta name="description" content="@yield('meta_description', 'Librairie en ligne — livres physiques, livraison partout en Tunisie, paiement à la livraison.')">
+    <meta name="description" content="@yield('meta_description', 'Boutique en ligne — livres et fournitures scolaires, livraison partout en Tunisie, paiement à la livraison.')">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,9 @@
 
             <nav class="site-nav" aria-label="Navigation principale">
                 <a href="{{ url('/') }}" class="site-nav__link {{ request()->is('/') ? 'is-active' : '' }}">Accueil</a>
-                <a href="{{ url('/livres') }}" class="site-nav__link {{ request()->is('livres*') ? 'is-active' : '' }}">Catalogue</a>
+                <a href="{{ url('/produits') }}" class="site-nav__link {{ request()->is('produits*') ? 'is-active' : '' }}">Catalogue</a>
+                <a href="{{ url('/livres') }}" class="site-nav__link {{ request()->is('livres*') ? 'is-active' : '' }}">Livres</a>
+                <a href="{{ url('/fournitures-scolaires') }}" class="site-nav__link {{ request()->is('fournitures-scolaires*') ? 'is-active' : '' }}">Fournitures</a>
                 <a href="{{ url('/categories') }}" class="site-nav__link {{ request()->is('categories*') ? 'is-active' : '' }}">Catégories</a>
                 <a href="{{ url('/suivi-commande') }}" class="site-nav__link {{ request()->is('suivi-commande') ? 'is-active' : '' }}">Suivi de commande</a>
             </nav>
@@ -58,7 +60,7 @@
                                     @if ($notif->data['type'] === 'order_status_updated')
                                         Commande {{ $notif->data['order_number'] }} : {{ $notif->data['status_label'] }}
                                     @elseif ($notif->data['type'] === 'review_approved')
-                                        Votre avis sur « {{ $notif->data['book_title'] }} » a été publié
+                                        Votre avis sur « {{ $notif->data['product_title'] }} » a été publié
                                     @endif
                                     <p class="text-faint" style="font-size:var(--text-xs);margin-top:2px">{{ $notif->created_at->diffForHumans() }}</p>
                                 </div>
@@ -113,7 +115,9 @@
                 <button type="button" class="icon-btn" data-menu-close aria-label="Fermer">✕</button>
             </div>
             <a href="{{ url('/') }}" class="mobile-menu__link">Accueil</a>
-            <a href="{{ url('/livres') }}" class="mobile-menu__link">Catalogue</a>
+            <a href="{{ url('/produits') }}" class="mobile-menu__link">Catalogue</a>
+            <a href="{{ url('/livres') }}" class="mobile-menu__link">Livres</a>
+            <a href="{{ url('/fournitures-scolaires') }}" class="mobile-menu__link">Fournitures scolaires</a>
             <a href="{{ url('/categories') }}" class="mobile-menu__link">Catégories</a>
             <a href="{{ url('/suivi-commande') }}" class="mobile-menu__link">Suivi de commande</a>
             @auth
@@ -134,15 +138,17 @@
             <div>
                 <p class="site-logo" style="color:var(--color-white)">Choumou3<span>.</span></p>
                 <p style="margin-top:var(--space-4);font-size:var(--text-sm);opacity:0.8;max-width:32ch">
-                    Votre librairie en ligne : des milliers de livres, livrés partout en Tunisie, paiement à la réception.
+                    Votre boutique en ligne : livres et fournitures scolaires, livrés partout en Tunisie, paiement à la réception.
                 </p>
             </div>
             <div>
                 <p class="site-footer__heading">Boutique</p>
-                <a href="{{ url('/livres') }}" class="site-footer__link">Catalogue</a>
+                <a href="{{ url('/produits') }}" class="site-footer__link">Catalogue</a>
+                <a href="{{ url('/livres') }}" class="site-footer__link">Livres</a>
+                <a href="{{ url('/fournitures-scolaires') }}" class="site-footer__link">Fournitures scolaires</a>
                 <a href="{{ url('/categories') }}" class="site-footer__link">Catégories</a>
-                <a href="{{ url('/livres?tri=nouveautes') }}" class="site-footer__link">Nouveautés</a>
-                <a href="{{ url('/livres?tri=meilleures-ventes') }}" class="site-footer__link">Meilleures ventes</a>
+                <a href="{{ url('/produits?tri=nouveautes') }}" class="site-footer__link">Nouveautés</a>
+                <a href="{{ url('/produits?tri=meilleures-ventes') }}" class="site-footer__link">Meilleures ventes</a>
             </div>
             <div>
                 <p class="site-footer__heading">Aide</p>

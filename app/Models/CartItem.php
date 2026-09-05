@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['cart_id', 'book_id', 'quantity'])]
+#[Fillable(['cart_id', 'product_id', 'quantity'])]
 class CartItem extends Model
 {
     public function cart(): BelongsTo
@@ -14,13 +14,13 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class);
     }
 
-    public function book(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function subtotal(): float
     {
-        return (float) $this->book->price * $this->quantity;
+        return (float) $this->product->price * $this->quantity;
     }
 }

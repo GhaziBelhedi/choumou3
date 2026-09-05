@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderTrackingController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/livres', [BookController::class, 'index'])->name('books.index');
-Route::get('/livres/consultes-recemment', [BookController::class, 'recentlyViewed'])->name('books.recently-viewed');
-Route::get('/livres/{book}', [BookController::class, 'show'])->name('books.show');
+Route::get('/produits', [ProductController::class, 'index'])->name('products.index');
+Route::get('/produits/consultes-recemment', [ProductController::class, 'recentlyViewed'])->name('products.recently-viewed');
+Route::get('/livres', [ProductController::class, 'books'])->name('products.books');
+Route::get('/fournitures-scolaires', [ProductController::class, 'supplies'])->name('products.supplies');
+Route::get('/produits/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
@@ -53,9 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/mon-compte/commandes/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     Route::get('/liste-de-souhaits', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/liste-de-souhaits/{book}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::post('/liste-de-souhaits/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
-    Route::post('/livres/{book}/avis', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/produits/{product}/avis', [ReviewController::class, 'store'])->name('reviews.store');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/tout-marquer-lu', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');

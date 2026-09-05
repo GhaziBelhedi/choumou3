@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             CategorySeeder::class,
             PublisherSeeder::class,
-            BookSeeder::class,
+            ProductSeeder::class,
         ]);
 
         User::factory()->admin()->create([

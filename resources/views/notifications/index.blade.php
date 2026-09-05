@@ -30,7 +30,7 @@
                         </p>
                     @elseif ($notif->data['type'] === 'review_approved')
                         <p style="font-size:var(--text-sm)">
-                            Votre avis sur « <strong>{{ $notif->data['book_title'] }}</strong> » a été publié.
+                            Votre avis sur « <strong>{{ $notif->data['product_title'] }}</strong> » a été publié.
                         </p>
                     @endif
                     <p class="text-faint" style="font-size:var(--text-xs);margin-top:var(--space-1)">{{ $notif->created_at->diffForHumans() }}</p>

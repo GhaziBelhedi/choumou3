@@ -4,7 +4,25 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     initImagePreview();
+    initProductTypeToggle();
 });
+
+/**
+ * Formulaire produit admin : masque les champs spécifiques aux livres
+ * (auteur, ISBN, langue, pages, éditeur...) quand le type = fourniture scolaire.
+ */
+function initProductTypeToggle() {
+    var select = document.querySelector('[data-product-type-select]');
+    var bookFields = document.querySelector('[data-book-fields]');
+    if (!select || !bookFields) return;
+
+    var toggle = function () {
+        bookFields.style.display = select.value === 'fourniture' ? 'none' : '';
+    };
+
+    select.addEventListener('change', toggle);
+    toggle();
+}
 
 function initImagePreview() {
     document.querySelectorAll('[data-image-input]').forEach(function (input) {

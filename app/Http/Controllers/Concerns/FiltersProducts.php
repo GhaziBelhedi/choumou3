@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Concerns;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-trait FiltersBooks
+trait FiltersProducts
 {
     /**
-     * Applique les filtres (catégorie, langue, éditeur, prix, recherche) à la requête.
+     * Applique les filtres (type, catégorie, langue, éditeur, prix, recherche) à la requête.
      */
     protected function applyFilters(Builder $query, Request $request): void
     {
         if ($q = $request->string('q')->trim()->toString()) {
             $query->whereFullText(['title', 'author', 'description'], $q);
+        }
+
+        if ($type = $request->string('type')->toString()) {
+            $query->where('type', $type);
         }
 
         if ($categorySlug = $request->string('categorie')->toString()) {

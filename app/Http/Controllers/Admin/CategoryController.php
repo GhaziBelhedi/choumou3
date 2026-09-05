@@ -15,7 +15,7 @@ class CategoryController extends Controller
 
     public function index(): View
     {
-        $categories = Category::withCount('books')->with('parent')->orderBy('name')->paginate(20);
+        $categories = Category::withCount('products')->with('parent')->orderBy('name')->paginate(20);
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -58,8 +58,8 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): RedirectResponse
     {
-        if ($category->books()->exists()) {
-            return back()->with('error', 'Impossible de supprimer : des livres sont encore rattachés à cette catégorie.');
+        if ($category->products()->exists()) {
+            return back()->with('error', 'Impossible de supprimer : des produits sont encore rattachés à cette catégorie.');
         }
 
         $category->delete();

@@ -19,7 +19,7 @@
             <div class="empty-state">
                 <h3>Aucune commande pour l'instant</h3>
                 <p style="margin-bottom:var(--space-6)">Vos commandes apparaîtront ici une fois passées.</p>
-                <a href="{{ route('books.index') }}" class="btn btn-primary">Découvrir le catalogue</a>
+                <a href="{{ route('products.index') }}" class="btn btn-primary">Découvrir le catalogue</a>
             </div>
         @else
             <div class="table-wrap">

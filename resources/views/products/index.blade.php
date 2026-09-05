@@ -25,7 +25,7 @@
                 <a href="{{ route('home') }}">Accueil</a>
                 <span>/</span>
                 @if ($currentCategory)
-                    <a href="{{ route('books.index') }}">Catalogue</a>
+                    <a href="{{ route('products.index') }}">Catalogue</a>
                     <span>/</span>
                     <span>{{ $currentCategory->name }}</span>
                 @else
@@ -40,7 +40,7 @@
 
         {{-- Sidebar filtres (desktop) --}}
         <aside class="filters-panel">
-            @include('books.partials.filters-form')
+            @include('products.partials.filters-form')
         </aside>
 
         {{-- Drawer filtres (mobile) --}}
@@ -51,13 +51,13 @@
                     <h2 style="font-family:var(--font-serif);font-size:var(--text-xl)">Filtres</h2>
                     <button type="button" class="icon-btn" data-filters-close aria-label="Fermer">✕</button>
                 </div>
-                @include('books.partials.filters-form')
+                @include('products.partials.filters-form')
             </div>
         </div>
 
         <div>
             <div class="catalog-toolbar">
-                <p class="catalog-toolbar__count">{{ $books->total() }} livre(s) trouvé(s)</p>
+                <p class="catalog-toolbar__count">{{ $products->total() }} produit(s) trouvé(s)</p>
 
                 <div class="flex" style="gap:var(--space-3)">
                     <button type="button" class="btn btn-secondary btn-sm filter-toggle-mobile" data-filters-toggle>
@@ -77,10 +77,13 @@
                 </div>
             </div>
 
-            @if (request()->anyFilled(['q', 'categorie', 'langue', 'editeur', 'prix_min', 'prix_max']))
+            @if (request()->anyFilled(['q', 'type', 'categorie', 'langue', 'editeur', 'prix_min', 'prix_max']))
                 <div class="active-filters">
                     @if ($q = request('q'))
                         <span class="active-filter-chip">Recherche : "{{ $q }}"</span>
+                    @endif
+                    @if ($type = request('type'))
+                        <span class="active-filter-chip">{{ \App\Models\Product::TYPES[$type] ?? $type }}</span>
                     @endif
                     @if ($cat = request('categorie'))
                         <span class="active-filter-chip">{{ $categories->firstWhere('slug', $cat)?->name ?? $cat }}</span>
@@ -91,25 +94,25 @@
                     @if ($pub = request('editeur'))
                         <span class="active-filter-chip">{{ $publishers->firstWhere('slug', $pub)?->name ?? $pub }}</span>
                     @endif
-                    <a href="{{ $currentCategory ? route('categories.show', $currentCategory->slug) : route('books.index') }}" class="active-filter-chip" style="background:var(--color-paper-soft);color:var(--color-ink-soft)">
+                    <a href="{{ $currentCategory ? route('categories.show', $currentCategory->slug) : route('products.index') }}" class="active-filter-chip" style="background:var(--color-paper-soft);color:var(--color-ink-soft)">
                         Réinitialiser ✕
                     </a>
                 </div>
             @endif
 
-            @if ($books->isEmpty())
+            @if ($products->isEmpty())
                 <div class="empty-state">
-                    <h3>Aucun livre ne correspond à votre recherche</h3>
+                    <h3>Aucun produit ne correspond à votre recherche</h3>
                     <p>Essayez d'élargir vos filtres ou votre recherche.</p>
                 </div>
             @else
                 <div class="product-grid">
-                    @foreach ($books as $book)
-                        <x-product.product-card :book="$book" />
+                    @foreach ($products as $product)
+                        <x-product.product-card :product="$product" />
                     @endforeach
                 </div>
 
-                {{ $books->links('pagination.custom') }}
+                {{ $products->links('pagination.custom') }}
             @endif
         </div>
     </div>

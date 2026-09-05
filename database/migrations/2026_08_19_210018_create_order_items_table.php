@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->foreignId('book_id')->nullable()->constrained('books')->nullOnDelete();
+            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
 
-            // Snapshots : la commande garde une trace même si le livre change ou est supprimé
-            $table->string('book_title_snapshot', 255);
-            $table->string('book_isbn_snapshot', 20)->nullable();
+            // Snapshots : la commande garde une trace même si le produit change ou est supprimé
+            $table->string('product_title_snapshot', 255);
+            $table->string('product_isbn_snapshot', 20)->nullable();
             $table->decimal('unit_price', 8, 2);
             $table->unsignedInteger('quantity');
             $table->decimal('subtotal', 10, 2);

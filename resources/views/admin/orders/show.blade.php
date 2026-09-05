@@ -21,7 +21,7 @@
                         <tbody>
                             @foreach ($order->items as $item)
                                 <tr>
-                                    <td>{{ $item->book_title_snapshot }}</td>
+                                    <td>{{ $item->product_title_snapshot }}</td>
                                     <td>{{ number_format((float) $item->unit_price, 2) }} DT</td>
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ number_format((float) $item->subtotal, 2) }} DT</td>

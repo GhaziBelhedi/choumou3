@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -14,26 +14,26 @@ class WishlistController extends Controller
 {
     public function index(): View
     {
-        $books = Auth::user()->wishlists()
-            ->with('book')
+        $products = Auth::user()->wishlists()
+            ->with('product')
             ->latest()
             ->get()
-            ->pluck('book')
+            ->pluck('product')
             ->filter();
 
-        return view('wishlist.index', compact('books'));
+        return view('wishlist.index', compact('products'));
     }
 
-    public function toggle(Request $request, Book $book): RedirectResponse|JsonResponse
+    public function toggle(Request $request, Product $product): RedirectResponse|JsonResponse
     {
-        $wishlist = Wishlist::where('user_id', Auth::id())->where('book_id', $book->id)->first();
+        $wishlist = Wishlist::where('user_id', Auth::id())->where('product_id', $product->id)->first();
 
         if ($wishlist) {
             $wishlist->delete();
             $message = 'Retiré de votre liste de souhaits.';
             $isWishlisted = false;
         } else {
-            Wishlist::create(['user_id' => Auth::id(), 'book_id' => $book->id]);
+            Wishlist::create(['user_id' => Auth::id(), 'product_id' => $product->id]);
             $message = 'Ajouté à votre liste de souhaits.';
             $isWishlisted = true;
         }
@@ -43,7 +43,7 @@ class WishlistController extends Controller
                 'success' => true,
                 'message' => $message,
                 'is_wishlisted' => $isWishlisted,
-                'book_id' => $book->id,
+                'product_id' => $product->id,
             ]);
         }
 

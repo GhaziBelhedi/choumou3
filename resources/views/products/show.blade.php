@@ -1,19 +1,24 @@
 @extends('layouts.app')
 
-@section('title', $book->title.' — '.$book->author.' — Choumou3')
-@section('meta_description', Str::limit(strip_tags($book->description), 155))
+@section('title', $product->title.($product->isBook() ? ' — '.$product->author : '').' — Choumou3')
+@section('meta_description', Str::limit(strip_tags($product->description), 155))
 
 @push('scripts')
     <script src="{{ asset('assets/js/gallery.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.trackRecentlyViewed) window.trackRecentlyViewed({{ $product->id }});
+        });
+    </script>
 @endpush
 
 @php
-    $allImages = collect([$book->cover_path ? $book->coverUrl() : null])
-        ->merge($book->images->map->url())
+    $allImages = collect([$product->cover_path ? $product->coverUrl() : null])
+        ->merge($product->images->map->url())
         ->filter()
         ->values();
     if ($allImages->isEmpty()) {
-        $allImages = collect([$book->coverUrl()]);
+        $allImages = collect([$product->coverUrl()]);
     }
 @endphp
 
@@ -23,13 +28,15 @@
         <nav class="breadcrumb" style="padding-top:var(--space-6)">
             <a href="{{ route('home') }}">Accueil</a>
             <span>/</span>
-            <a href="{{ route('books.index') }}">Catalogue</a>
-            @if ($book->categories->isNotEmpty())
+            <a href="{{ $product->isBook() ? route('products.books') : route('products.supplies') }}">
+                {{ $product->isBook() ? 'Livres' : 'Fournitures scolaires' }}
+            </a>
+            @if ($product->categories->isNotEmpty())
                 <span>/</span>
-                <a href="{{ route('categories.show', $book->categories->first()->slug) }}">{{ $book->categories->first()->name }}</a>
+                <a href="{{ route('categories.show', $product->categories->first()->slug) }}">{{ $product->categories->first()->name }}</a>
             @endif
             <span>/</span>
-            <span>{{ $book->title }}</span>
+            <span>{{ $product->title }}</span>
         </nav>
     </div>
 
@@ -38,7 +45,7 @@
         {{-- Galerie --}}
         <div>
             <div class="product-gallery__main" data-gallery-main>
-                <img src="{{ $allImages->first() }}" alt="Couverture de {{ $book->title }}" id="gallery-main-img">
+                <img src="{{ $allImages->first() }}" alt="Couverture de {{ $product->title }}" id="gallery-main-img">
             </div>
 
             @if ($allImages->count() > 1)
@@ -50,7 +57,7 @@
                             data-gallery-thumb
                             data-full-src="{{ $src }}"
                         >
-                            <img src="{{ $src }}" alt="Image {{ $i + 1 }} de {{ $book->title }}" loading="lazy">
+                            <img src="{{ $src }}" alt="Image {{ $i + 1 }} de {{ $product->title }}" loading="lazy">
                         </button>
                     @endforeach
                 </div>
@@ -59,49 +66,54 @@
 
         {{-- Infos & achat --}}
         <div>
-            @if ($book->categories->isNotEmpty())
-                <div class="flex" style="gap:var(--space-2);margin-bottom:var(--space-3)">
-                    @foreach ($book->categories as $category)
-                        <a href="{{ route('categories.show', $category->slug) }}" class="badge badge-neutral">{{ $category->name }}</a>
-                    @endforeach
-                </div>
+            <div class="flex" style="gap:var(--space-2);margin-bottom:var(--space-3);flex-wrap:wrap">
+                <span class="badge {{ $product->isBook() ? 'badge-primary' : 'badge-info' }}">{{ $product->typeLabel() }}</span>
+                @foreach ($product->categories as $category)
+                    <a href="{{ route('categories.show', $category->slug) }}" class="badge badge-neutral">{{ $category->name }}</a>
+                @endforeach
+            </div>
+
+            <h1 class="product-info__title">{{ $product->title }}</h1>
+            @if ($product->isBook())
+                <p class="product-info__author">de <strong>{{ $product->author }}</strong></p>
             @endif
 
-            <h1 class="product-info__title">{{ $book->title }}</h1>
-            <p class="product-info__author">de <strong>{{ $book->author }}</strong></p>
-
             <div class="flex" style="gap:var(--space-3)">
-                <x-product.rating-stars :rating="$book->average_rating" :count="$book->reviews_count" :size="18" />
-                <x-product.stock-badge :quantity="$book->stock_quantity" />
+                <x-product.rating-stars :rating="$product->average_rating" :count="$product->reviews_count" :size="18" />
+                <x-product.stock-badge :quantity="$product->stock_quantity" />
             </div>
 
             <div style="margin-top:var(--space-5)">
-                <x-product.price-tag :book="$book" size="lg" />
+                <x-product.price-tag :product="$product" size="lg" />
             </div>
 
             <div class="product-info__meta">
-                <div><span>Auteur</span>{{ $book->author }}</div>
-                <div><span>Éditeur</span>{{ $book->publisher->name ?? '—' }}</div>
-                <div><span>ISBN</span>{{ $book->isbn ?? '—' }}</div>
-                <div><span>Pages</span>{{ $book->pages ?? '—' }}</div>
-                <div><span>Langue</span>{{ ['fr' => 'Français', 'ar' => 'Arabe', 'en' => 'Anglais'][$book->language] ?? $book->language }}</div>
-                <div><span>Parution</span>{{ $book->publication_date?->format('d/m/Y') ?? '—' }}</div>
+                @if ($product->isBook())
+                    <div><span>Auteur</span>{{ $product->author }}</div>
+                    <div><span>Éditeur</span>{{ $product->publisher->name ?? '—' }}</div>
+                    <div><span>ISBN</span>{{ $product->isbn ?? '—' }}</div>
+                    <div><span>Pages</span>{{ $product->pages ?? '—' }}</div>
+                    <div><span>Langue</span>{{ ['fr' => 'Français', 'ar' => 'Arabe', 'en' => 'Anglais'][$product->language] ?? '—' }}</div>
+                    <div><span>Parution</span>{{ $product->publication_date?->format('d/m/Y') ?? '—' }}</div>
+                @else
+                    <div><span>Référence</span>{{ $product->sku ?? '—' }}</div>
+                @endif
             </div>
 
-            @if ($book->stock_quantity > 0)
+            @if ($product->stock_quantity > 0)
                 <form method="POST" action="{{ route('cart.store') }}" class="product-buybox" data-add-to-cart-form>
                     @csrf
-                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="qty-stepper" data-qty-stepper>
                         <button type="button" data-qty-decrement aria-label="Diminuer">−</button>
-                        <input type="number" name="quantity" value="1" min="1" max="{{ $book->stock_quantity }}">
+                        <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock_quantity }}">
                         <button type="button" data-qty-increment aria-label="Augmenter">+</button>
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg" style="flex:1" data-loading-text="Ajout...">Ajouter au panier</button>
                 </form>
             @else
                 <div class="alert alert-info" style="margin-top:var(--space-6)">
-                    Ce livre est actuellement en rupture de stock.
+                    Ce produit est actuellement en rupture de stock.
                 </div>
             @endif
         </div>
@@ -111,19 +123,19 @@
     <div class="container" style="padding-block:var(--space-10)">
         <div class="tabs__list">
             <button type="button" class="tabs__tab is-active" data-tab="description">Description</button>
-            <button type="button" class="tabs__tab" data-tab="avis">Avis clients ({{ $book->reviews_count }})</button>
+            <button type="button" class="tabs__tab" data-tab="avis">Avis clients ({{ $product->reviews_count }})</button>
         </div>
 
         <div class="tabs__panel is-active" data-tab-panel="description">
             <div style="max-width:70ch;line-height:var(--leading-relaxed)">
-                {!! nl2br(e($book->description)) !!}
+                {!! nl2br(e($product->description)) !!}
             </div>
         </div>
 
         <div class="tabs__panel" data-tab-panel="avis">
             @auth
-                @if (! $book->reviews()->where('user_id', auth()->id())->exists())
-                    <form method="POST" action="{{ route('reviews.store', $book) }}" class="card" style="margin-bottom:var(--space-6);max-width:520px">
+                @if (! $product->reviews()->where('user_id', auth()->id())->exists())
+                    <form method="POST" action="{{ route('reviews.store', $product) }}" class="card" style="margin-bottom:var(--space-6);max-width:520px">
                         @csrf
                         <h3 style="font-family:var(--font-serif);font-size:var(--text-base);margin-bottom:var(--space-4)">Donner votre avis</h3>
 
@@ -153,11 +165,11 @@
                 @endif
             @else
                 <p class="text-muted" style="font-size:var(--text-sm);margin-bottom:var(--space-6)">
-                    <a href="{{ route('login') }}" class="text-primary">Connectez-vous</a> pour laisser un avis sur ce livre.
+                    <a href="{{ route('login') }}" class="text-primary">Connectez-vous</a> pour laisser un avis sur ce produit.
                 </p>
             @endauth
 
-            @forelse ($book->approvedReviews as $review)
+            @forelse ($product->approvedReviews as $review)
                 <div class="review-item">
                     <div class="review-item__header">
                         <span class="review-item__author">{{ $review->user->name }}</span>
@@ -171,20 +183,20 @@
             @empty
                 <div class="empty-state">
                     <h3>Aucun avis pour l'instant</h3>
-                    <p>Soyez le premier à donner votre avis sur ce livre.</p>
+                    <p>Soyez le premier à donner votre avis sur ce produit.</p>
                 </div>
             @endforelse
         </div>
     </div>
 
-    {{-- Livres similaires --}}
-    @if ($similarBooks->isNotEmpty())
+    {{-- Produits similaires --}}
+    @if ($similarProducts->isNotEmpty())
         <section class="section" style="background:var(--color-paper-soft)">
             <div class="container">
                 <h2 class="section-title">Vous aimerez aussi</h2>
                 <div class="product-grid">
-                    @foreach ($similarBooks as $similar)
-                        <x-product.product-card :book="$similar" />
+                    @foreach ($similarProducts as $similar)
+                        <x-product.product-card :product="$similar" />
                     @endforeach
                 </div>
             </div>

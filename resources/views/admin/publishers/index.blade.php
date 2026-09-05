@@ -15,7 +15,7 @@
                 @forelse ($publishers as $publisher)
                     <tr>
                         <td style="font-weight:600">{{ $publisher->name }}</td>
-                        <td>{{ $publisher->books_count }}</td>
+                        <td>{{ $publisher->products_count }}</td>
                         <td>
                             <div class="flex" style="gap:var(--space-2)">
                                 <a href="{{ route('admin.editeurs.edit', $publisher) }}" class="text-primary" style="font-size:var(--text-sm)">Modifier</a>
