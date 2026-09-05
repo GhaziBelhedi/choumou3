@@ -15,18 +15,38 @@
     <link rel="stylesheet" href="{{ asset('assets/css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}">
 </head>
 <body
-    style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--space-6);background:var(--color-paper-soft)"
+    class="auth-layout"
     @if(session('success')) data-flash-success="{{ session('success') }}" @endif
 >
 
-    <div style="width:100%;max-width:420px">
-        <div style="text-align:center;margin-bottom:var(--space-8)">
-            <a href="{{ url('/') }}" class="site-logo" style="font-size:var(--text-3xl)">Choumou3<span>.</span></a>
+    <a href="#auth-main" class="skip-link">Aller au contenu principal</a>
+
+    {{-- Panneau de marque (desktop uniquement) --}}
+    <aside class="auth-brand">
+        <a href="{{ url('/') }}" class="auth-brand__logo">Choumou3<span>.</span></a>
+
+        <div class="auth-brand__content">
+            <h1>Votre librairie, sans détour.</h1>
+            <p>Livres et fournitures scolaires, livrés partout en Tunisie. Paiement à la réception, sans surprise.</p>
+
+            <ul class="auth-brand__stats">
+                <li><strong>500+</strong><span>Produits</span></li>
+                <li><strong>24</strong><span>Gouvernorats livrés</span></li>
+                <li><strong>100%</strong><span>Paiement à la livraison</span></li>
+            </ul>
         </div>
 
-        <div class="card" style="box-shadow:var(--shadow-md)">
+        <p class="auth-brand__footer">&copy; {{ date('Y') }} Choumou3 — Tous droits réservés.</p>
+    </aside>
+
+    {{-- Panneau formulaire --}}
+    <main id="auth-main" class="auth-form-panel" tabindex="-1">
+        <div class="auth-form-wrap">
+            <a href="{{ url('/') }}" class="auth-form-wrap__logo">Choumou3<span>.</span></a>
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul style="padding-inline-start:var(--space-4);list-style:disc">
@@ -37,13 +57,15 @@
                 </div>
             @endif
 
-            @yield('content')
-        </div>
+            <div class="auth-card">
+                @yield('content')
+            </div>
 
-        <p class="text-center text-muted" style="margin-top:var(--space-6);font-size:var(--text-sm)">
-            <a href="{{ url('/') }}">&larr; Retour à la boutique</a>
-        </p>
-    </div>
+            <p class="text-center text-muted auth-form-wrap__back">
+                <a href="{{ url('/') }}">&larr; Retour à la boutique</a>
+            </p>
+        </div>
+    </main>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
 </body>

@@ -1,0 +1,203 @@
+/* Pages d'authentification — layout split-screen (marque + formulaire) */
+
+.auth-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--color-paper);
+}
+
+/* ---------- Panneau de marque (desktop) ---------- */
+
+.auth-brand {
+    display: none;
+    position: relative;
+    width: 44%;
+    min-width: 420px;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    padding: var(--space-10);
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+@media (min-width: 960px) {
+    .auth-brand { display: flex; }
+}
+
+.auth-brand::before,
+.auth-brand::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: auth-float 9s ease-in-out infinite;
+}
+
+.auth-brand::before {
+    width: 320px;
+    height: 320px;
+    background: rgba(255,255,255,0.1);
+    top: -120px;
+    right: -100px;
+}
+
+.auth-brand::after {
+    width: 220px;
+    height: 220px;
+    background: rgba(255, 183, 3, 0.18);
+    bottom: -100px;
+    left: -60px;
+    animation-delay: -4s;
+}
+
+@keyframes auth-float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.06); }
+}
+
+.auth-brand__logo {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.auth-brand__logo span { color: var(--color-gold); }
+
+.auth-brand__content {
+    position: relative;
+    z-index: 1;
+    max-width: 380px;
+}
+
+.auth-brand__content h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-4xl);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-4);
+    text-shadow: 0 2px 16px rgba(0,0,0,0.15);
+}
+
+.auth-brand__content p {
+    font-size: var(--text-base);
+    opacity: 0.92;
+    line-height: var(--leading-relaxed);
+}
+
+.auth-brand__stats {
+    display: flex;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    flex-wrap: wrap;
+}
+
+.auth-brand__stats strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+}
+
+.auth-brand__stats span {
+    display: block;
+    font-size: var(--text-xs);
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.auth-brand__footer {
+    position: relative;
+    z-index: 1;
+    font-size: var(--text-xs);
+    opacity: 0.7;
+}
+
+/* ---------- Panneau formulaire ---------- */
+
+.auth-form-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+}
+
+.auth-form-wrap {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-form-wrap__logo {
+    display: block;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: var(--space-8);
+}
+
+@media (min-width: 960px) {
+    .auth-form-wrap__logo { display: none; }
+}
+
+.auth-form-wrap__logo span { color: var(--color-primary); }
+
+.auth-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    animation: auth-card-in 500ms cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes auth-card-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form-wrap__back {
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+}
+
+.auth-form-wrap__back a:hover { color: var(--color-primary); }
+
+/* ---------- Titre / sous-titre de formulaire (utilisé par login/register/...) ---------- */
+
+.auth-card__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+}
+
+.auth-card__subtitle {
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-6);
+}
+
+/* ---------- Séparateur ---------- */
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block: var(--space-6);
+    color: var(--color-ink-faint);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}

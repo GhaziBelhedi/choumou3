@@ -3,19 +3,20 @@
 @section('title', 'Connexion')
 
 @section('content')
-    <h1 style="font-family:var(--font-serif);font-size:var(--text-2xl);margin-bottom:var(--space-6)">Connexion</h1>
+    <h1 class="auth-card__title">Content de vous revoir 👋</h1>
+    <p class="auth-card__subtitle">Connectez-vous pour retrouver votre panier, votre liste de souhaits et vos commandes.</p>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <div class="field">
             <label class="field__label" for="email">Adresse e-mail</label>
-            <input class="input" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+            <input class="input" type="email" id="email" name="email" value="{{ old('email') }}" placeholder="vous@exemple.com" required autofocus>
         </div>
 
         <div class="field">
             <label class="field__label" for="password">Mot de passe</label>
-            <input class="input" type="password" id="password" name="password" required>
+            <input class="input" type="password" id="password" name="password" placeholder="••••••••" required>
         </div>
 
         <div class="flex-between" style="margin-bottom:var(--space-6)">
@@ -30,6 +31,6 @@
     </form>
 
     <p class="text-center text-muted" style="margin-top:var(--space-6);font-size:var(--text-sm)">
-        Pas encore de compte ? <a href="{{ route('register') }}" class="text-primary">Créer un compte</a>
+        Pas encore de compte ? <a href="{{ route('register') }}" class="text-primary" style="font-weight:600">Créer un compte</a>
     </p>
 @endsection
