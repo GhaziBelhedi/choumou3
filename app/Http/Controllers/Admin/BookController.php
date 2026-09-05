@@ -142,6 +142,7 @@ class BookController extends Controller
             'compare_at_price' => ['nullable', 'numeric', 'min:0', 'gt:price'],
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'sku' => ['nullable', 'string', 'max:60'],
+            'deal_ends_at' => ['nullable', 'date', 'after:now'],
             'cover' => ['nullable', 'image', 'max:4096'],
             'gallery.*' => ['nullable', 'image', 'max:4096'],
             'categories' => ['nullable', 'array'],

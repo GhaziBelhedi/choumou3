@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderTrackingController;
@@ -16,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/livres', [BookController::class, 'index'])->name('books.index');
+Route::get('/livres/consultes-recemment', [BookController::class, 'recentlyViewed'])->name('books.recently-viewed');
 Route::get('/livres/{book}', [BookController::class, 'show'])->name('books.show');
+
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');

@@ -87,6 +87,13 @@
         <label class="checkbox-row"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $book->is_active ?? true))> Actif (visible sur le site)</label>
         <label class="checkbox-row"><input type="checkbox" name="is_featured" value="1" @checked(old('is_featured', $book->is_featured ?? false))> Mettre en avant (coup de cœur)</label>
     </div>
+
+    <div class="field">
+        <label class="field__label" for="deal_ends_at">Deal du jour — mis en avant jusqu'au <span class="text-faint">(optionnel)</span></label>
+        <input class="input @error('deal_ends_at') has-error @enderror" type="datetime-local" id="deal_ends_at" name="deal_ends_at" value="{{ old('deal_ends_at', optional($book?->deal_ends_at)->format('Y-m-d\TH:i')) }}">
+        <span class="field__hint">Si renseigné et dans le futur, ce livre peut apparaître comme « Deal du jour » sur la home (le plus proche de l'échéance est affiché).</span>
+        @error('deal_ends_at') <span class="field__error">{{ $message }}</span> @enderror
+    </div>
 </div>
 
 <div class="field">

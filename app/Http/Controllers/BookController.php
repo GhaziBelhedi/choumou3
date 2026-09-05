@@ -54,4 +54,20 @@ class BookController extends Controller
             'similarBooks' => $similarBooks,
         ]);
     }
+
+    /**
+     * Endpoint AJAX pour la section "Consultés récemment" de la home — les IDs
+     * viennent du localStorage du navigateur (tracking client, pas de session serveur).
+     */
+    public function recentlyViewed(Request $request): View
+    {
+        $ids = array_filter(array_map('intval', explode(',', (string) $request->query('ids'))));
+        $ids = array_slice($ids, 0, 8);
+
+        $books = empty($ids)
+            ? collect()
+            : Book::active()->whereIn('id', $ids)->get()->sortBy(fn ($book) => array_search($book->id, $ids))->values();
+
+        return view('books.partials.recently-viewed-cards', compact('books'));
+    }
 }

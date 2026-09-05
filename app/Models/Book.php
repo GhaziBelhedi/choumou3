@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'title', 'slug', 'author', 'isbn', 'description', 'language', 'pages',
     'publisher_id', 'publication_date', 'price', 'compare_at_price',
-    'stock_quantity', 'sku', 'cover_path', 'is_featured', 'is_active',
+    'stock_quantity', 'sku', 'cover_path', 'is_featured', 'is_active', 'deal_ends_at',
 ])]
 class Book extends Model
 {
@@ -30,6 +30,7 @@ class Book extends Model
             'average_rating' => 'decimal:2',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
+            'deal_ends_at' => 'datetime',
         ];
     }
 
@@ -76,6 +77,35 @@ class Book extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    /**
+     * Livres actuellement "en deal" (mise en avant avec compte à rebours), triés
+     * par échéance la plus proche — le premier résultat est LE deal du jour affiché en home.
+     */
+    public function scopeOnDeal($query)
+    {
+        return $query->whereNotNull('deal_ends_at')->where('deal_ends_at', '>', now())->orderBy('deal_ends_at');
+    }
+
+    public function isDealActive(): bool
+    {
+        return $this->deal_ends_at !== null && $this->deal_ends_at->isFuture();
+    }
+
+    /**
+     * % de stock déjà écoulé pour la barre de progression du deal du jour,
+     * basé sur des données réelles (sales_count / stock_quantity), pas fictives.
+     */
+    public function dealProgressPercent(): int
+    {
+        $total = $this->sales_count + $this->stock_quantity;
+
+        if ($total <= 0) {
+            return 0;
+        }
+
+        return (int) min(100, round(($this->sales_count / $total) * 100));
     }
 
     /**
