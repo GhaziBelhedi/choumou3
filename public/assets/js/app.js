@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initMobileMenu();
     initDropdowns();
     autoDismissAlerts();
+    initQuantityStepper();
 });
 
 /* ---------- Menu mobile ---------- */
@@ -81,6 +82,41 @@ function autoDismissAlerts() {
             el.style.opacity = '0';
             setTimeout(function () { el.remove(); }, 300);
         }, 4000);
+    });
+}
+
+/* ---------- Stepper quantité (fiche produit, panier) ---------- */
+function initQuantityStepper() {
+    document.querySelectorAll('[data-qty-stepper]').forEach(function (stepper) {
+        var input = stepper.querySelector('input');
+        var decrement = stepper.querySelector('[data-qty-decrement]');
+        var increment = stepper.querySelector('[data-qty-increment]');
+        var max = parseInt(input.getAttribute('max') || '99', 10);
+
+        var clamp = function (value) {
+            return Math.min(Math.max(value, 1), max);
+        };
+
+        if (decrement) {
+            decrement.addEventListener('click', function () {
+                input.value = clamp((parseInt(input.value, 10) || 1) - 1);
+                input.dispatchEvent(new Event('change'));
+            });
+        }
+
+        if (increment) {
+            increment.addEventListener('click', function () {
+                input.value = clamp((parseInt(input.value, 10) || 1) + 1);
+                input.dispatchEvent(new Event('change'));
+            });
+        }
+
+        input.addEventListener('change', function () {
+            input.value = clamp(parseInt(input.value, 10) || 1);
+            if (stepper.hasAttribute('data-auto-submit')) {
+                stepper.closest('form').submit();
+            }
+        });
     });
 }
 

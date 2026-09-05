@@ -6,7 +6,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     initProductGallery();
     initTabs();
-    initQuantityStepper();
 });
 
 function initProductGallery() {
@@ -43,33 +42,3 @@ function initTabs() {
     });
 }
 
-function initQuantityStepper() {
-    document.querySelectorAll('[data-qty-stepper]').forEach(function (stepper) {
-        var input = stepper.querySelector('input');
-        var decrement = stepper.querySelector('[data-qty-decrement]');
-        var increment = stepper.querySelector('[data-qty-increment]');
-        var max = parseInt(input.getAttribute('max') || '99', 10);
-
-        var clamp = function (value) {
-            return Math.min(Math.max(value, 1), max);
-        };
-
-        if (decrement) {
-            decrement.addEventListener('click', function () {
-                input.value = clamp((parseInt(input.value, 10) || 1) - 1);
-                input.dispatchEvent(new Event('change'));
-            });
-        }
-
-        if (increment) {
-            increment.addEventListener('click', function () {
-                input.value = clamp((parseInt(input.value, 10) || 1) + 1);
-                input.dispatchEvent(new Event('change'));
-            });
-        }
-
-        input.addEventListener('change', function () {
-            input.value = clamp(parseInt(input.value, 10) || 1);
-        });
-    });
-}

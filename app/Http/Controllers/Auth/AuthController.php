@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,10 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    public function __construct(protected CartService $cartService)
+    {
+    }
+
     public function showRegister(): View
     {
         return view('auth.register');
@@ -45,6 +50,7 @@ class AuthController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        $this->cartService->mergeGuestCartIntoUser($user);
 
         return redirect()->intended(route('home'))
             ->with('success', 'Bienvenue ! Votre compte a été créé.');
@@ -71,6 +77,7 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
+        $this->cartService->mergeGuestCartIntoUser(Auth::user());
 
         return redirect()->intended(route('home'))
             ->with('success', 'Connexion réussie. Ravis de vous revoir !');

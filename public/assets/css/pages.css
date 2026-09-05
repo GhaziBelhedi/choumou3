@@ -387,6 +387,128 @@
     font-weight: 600;
 }
 
+/* ---------- Panier ---------- */
+
+.cart-layout {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 960px) {
+    .cart-layout {
+        grid-template-columns: 1fr 380px;
+        align-items: start;
+    }
+}
+
+/* ---------- Checkout ---------- */
+
+.checkout-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+}
+
+.checkout-step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-ink-faint);
+}
+
+.checkout-step__circle {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background: var(--color-paper-soft);
+    color: var(--color-ink-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--text-xs);
+}
+
+.checkout-step.is-active,
+.checkout-step.is-done {
+    color: var(--color-ink);
+}
+
+.checkout-step.is-active .checkout-step__circle,
+.checkout-step.is-done .checkout-step__circle {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.checkout-step__sep {
+    width: 32px;
+    height: 1px;
+    background: var(--color-border);
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: 960px;
+    margin-inline: auto;
+}
+
+@media (min-width: 800px) {
+    .checkout-layout { grid-template-columns: 1.4fr 1fr; align-items: start; }
+}
+
+/* ---------- Timeline de statut commande ---------- */
+
+.status-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.status-timeline__item {
+    display: flex;
+    gap: var(--space-4);
+    position: relative;
+    padding-bottom: var(--space-6);
+}
+
+.status-timeline__item:last-child { padding-bottom: 0; }
+
+.status-timeline__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    margin-top: 4px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.status-timeline__item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 16px;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-border);
+}
+
+.status-timeline__label {
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+.status-timeline__date {
+    font-size: var(--text-xs);
+    color: var(--color-ink-faint);
+}
+
 /* ---------- Carrousel simple (scroll horizontal) ---------- */
 
 .scroll-row {

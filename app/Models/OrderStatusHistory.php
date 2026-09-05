@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['order_id', 'status', 'note', 'changed_by'])]
 class OrderStatusHistory extends Model
 {
+    protected $table = 'order_status_history';
+
     const UPDATED_AT = null;
 
     public function order(): BelongsTo
