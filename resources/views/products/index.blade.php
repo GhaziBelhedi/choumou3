@@ -32,7 +32,10 @@
                     <span>Catalogue</span>
                 @endif
             </nav>
-            <h1>{{ $currentCategory ? $currentCategory->name : 'Tout le catalogue' }}</h1>
+            <div class="page-header__meta">
+                <h1>{{ $currentCategory ? $currentCategory->name : 'Tout le catalogue' }}</h1>
+                <span class="page-header__count">{{ $products->total() }} produit{{ $products->total() > 1 ? 's' : '' }}</span>
+            </div>
         </div>
     </div>
 
@@ -57,18 +60,17 @@
 
         <div>
             <div class="catalog-toolbar">
-                <p class="catalog-toolbar__count">{{ $products->total() }} produit(s) trouvé(s)</p>
+                <button type="button" class="btn btn-secondary btn-sm filter-toggle-mobile" data-filters-toggle>
+                    ⚙️ Filtres
+                </button>
 
-                <div class="flex" style="gap:var(--space-3)">
-                    <button type="button" class="btn btn-secondary btn-sm filter-toggle-mobile" data-filters-toggle>
-                        Filtres
-                    </button>
-
-                    <form method="GET" action="{{ url()->current() }}">
+                <div class="flex" style="gap:var(--space-3);margin-left:auto">
+                    <form method="GET" action="{{ url()->current() }}" class="flex" style="gap:var(--space-2)">
                         @foreach (request()->except(['tri', 'page']) as $key => $value)
                             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                         @endforeach
-                        <select name="tri" class="select" onchange="this.form.submit()" aria-label="Trier par">
+                        <label class="text-faint" style="font-size:var(--text-sm)" for="tri-select">Trier par</label>
+                        <select name="tri" id="tri-select" class="select" onchange="this.form.submit()" aria-label="Trier par">
                             @foreach ($sortOptions as $value => $label)
                                 <option value="{{ $value }}" @selected($currentSort === $value)>{{ $label }}</option>
                             @endforeach
@@ -99,14 +101,17 @@
 
             @if ($products->isEmpty())
                 <div class="empty-state">
+                    <span class="empty-state__icon">🔎</span>
                     <h3>Aucun produit ne correspond à votre recherche</h3>
                     <p>Essayez d'élargir vos filtres ou votre recherche.</p>
                 </div>
             @else
-                <div class="product-grid">
-                    @foreach ($products as $product)
-                        <x-product.product-card :product="$product" />
-                    @endforeach
+                <div data-reveal>
+                    <div class="product-grid">
+                        @foreach ($products as $product)
+                            <x-product.product-card :product="$product" />
+                        @endforeach
+                    </div>
                 </div>
 
                 {{ $products->links('pagination.custom') }}

@@ -1,7 +1,7 @@
 <form method="GET" action="{{ url()->current() }}" data-filters-form>
 
     <div class="filter-group">
-        <label class="field__label" for="filter-q">Recherche</label>
+        <label class="field__label" for="filter-q">🔎 Recherche</label>
         <input
             class="input"
             style="margin-top:var(--space-2)"
@@ -14,7 +14,7 @@
     </div>
 
     <div class="filter-group">
-        <p class="filter-group__title">Type de produit</p>
+        <p class="filter-group__title">🗂️ Type de produit</p>
         <label class="filter-option">
             <input type="radio" name="type" value="" @checked(! request('type'))>
             Tout
@@ -22,13 +22,13 @@
         @foreach (\App\Models\Product::TYPES as $value => $label)
             <label class="filter-option">
                 <input type="radio" name="type" value="{{ $value }}" @checked(request('type') === $value)>
-                {{ $label }}
+                {{ $value === 'livre' ? '📚' : '✏️' }} {{ $label }}
             </label>
         @endforeach
     </div>
 
     <div class="filter-group">
-        <p class="filter-group__title">Catégorie</p>
+        <p class="filter-group__title">🏷️ Catégorie</p>
         <label class="filter-option">
             <input type="radio" name="categorie" value="" @checked(! request('categorie'))>
             Toutes les catégories
@@ -42,7 +42,7 @@
     </div>
 
     <div class="filter-group">
-        <p class="filter-group__title">Langue</p>
+        <p class="filter-group__title">🌐 Langue</p>
         <label class="filter-option">
             <input type="radio" name="langue" value="" @checked(! request('langue'))>
             Toutes les langues
@@ -56,7 +56,7 @@
     </div>
 
     <div class="filter-group">
-        <p class="filter-group__title">Prix (DT)</p>
+        <p class="filter-group__title">💰 Prix (DT)</p>
         <div class="filter-price-row">
             <input class="input" type="number" min="0" step="0.5" name="prix_min" value="{{ request('prix_min') }}" placeholder="Min">
             <span class="text-faint">—</span>
