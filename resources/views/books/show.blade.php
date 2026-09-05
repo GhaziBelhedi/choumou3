@@ -50,7 +50,7 @@
                             data-gallery-thumb
                             data-full-src="{{ $src }}"
                         >
-                            <img src="{{ $src }}" alt="Image {{ $i + 1 }}">
+                            <img src="{{ $src }}" alt="Image {{ $i + 1 }} de {{ $book->title }}" loading="lazy">
                         </button>
                     @endforeach
                 </div>

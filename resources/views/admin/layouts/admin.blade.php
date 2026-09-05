@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Administration') — Choumou3</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +19,8 @@
     @stack('styles')
 </head>
 <body>
+
+    <a href="#admin-main-content" class="skip-link">Aller au contenu principal</a>
 
     <div class="admin-layout">
         <aside class="admin-sidebar">
@@ -73,7 +76,7 @@
                 </form>
             </header>
 
-            <div class="admin-content">
+            <div class="admin-content" id="admin-main-content" tabindex="-1">
                 @if (session('success'))
                     <div class="alert alert-success" data-auto-dismiss>{{ session('success') }}</div>
                 @endif

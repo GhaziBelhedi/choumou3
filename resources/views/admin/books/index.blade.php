@@ -39,7 +39,7 @@
             <tbody>
                 @forelse ($books as $book)
                     <tr>
-                        <td><img src="{{ $book->coverUrl() }}" alt="" style="width:36px;height:50px;object-fit:cover;border-radius:var(--radius-sm)"></td>
+                        <td><img src="{{ $book->coverUrl() }}" alt="Couverture de {{ $book->title }}" loading="lazy" style="width:36px;height:50px;object-fit:cover;border-radius:var(--radius-sm)"></td>
                         <td style="font-weight:600">{{ $book->title }}</td>
                         <td>{{ $book->author }}</td>
                         <td>{{ $book->publisher->name ?? '—' }}</td>

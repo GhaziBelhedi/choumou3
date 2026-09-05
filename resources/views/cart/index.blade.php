@@ -41,7 +41,7 @@
                                     <tr>
                                         <td>
                                             <div class="flex" style="gap:var(--space-3)">
-                                                <img src="{{ $item->book->coverUrl() }}" alt="" style="width:48px;height:68px;object-fit:cover;border-radius:var(--radius-sm)">
+                                                <img src="{{ $item->book->coverUrl() }}" alt="Couverture de {{ $item->book->title }}" loading="lazy" style="width:48px;height:68px;object-fit:cover;border-radius:var(--radius-sm)">
                                                 <div>
                                                     <a href="{{ route('books.show', $item->book->slug) }}" style="font-weight:600">{{ $item->book->title }}</a>
                                                     <p class="text-faint" style="font-size:var(--text-xs)">{{ $item->book->author }}</p>

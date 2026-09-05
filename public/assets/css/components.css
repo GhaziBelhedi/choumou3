@@ -397,6 +397,24 @@
 .text-faint { color: var(--color-ink-faint); }
 .text-primary { color: var(--color-primary); }
 .text-center { text-align: center; }
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--space-4);
+    z-index: 1000;
+    background: var(--color-ink);
+    color: var(--color-white);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: var(--space-4);
+}
+
 .sr-only {
     position: absolute;
     width: 1px; height: 1px;

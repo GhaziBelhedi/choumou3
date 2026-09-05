@@ -106,7 +106,7 @@
     <div class="field">
         <label class="field__label">Couverture</label>
         @if (! empty($book?->cover_path))
-            <img src="{{ $book->coverUrl() }}" alt="" style="width:80px;height:112px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-2)">
+            <img src="{{ $book->coverUrl() }}" alt="Couverture actuelle de {{ $book->title }}" style="width:80px;height:112px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-2)">
         @endif
         <label for="cover" class="image-dropzone">
             <span class="text-muted" style="font-size:var(--text-sm)">Cliquer pour choisir une image de couverture</span>
@@ -128,7 +128,7 @@
             <div class="image-preview-grid">
                 @foreach ($book->images as $image)
                     <div style="position:relative">
-                        <img src="{{ $image->url() }}" alt="">
+                        <img src="{{ $image->url() }}" alt="Image de la galerie" loading="lazy">
                         <form method="POST" action="{{ route('admin.livres.images.destroy', $image) }}" style="position:absolute;top:2px;right:2px" onsubmit="return confirm('Supprimer cette image ?')">
                             @csrf @method('DELETE')
                             <button type="submit" style="background:var(--color-white);border-radius:var(--radius-full);width:22px;height:22px;font-size:12px">✕</button>

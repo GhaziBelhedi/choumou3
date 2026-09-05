@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'Librairie'))</title>
     <meta name="description" content="@yield('meta_description', 'Librairie en ligne — livres physiques, livraison partout en Tunisie, paiement à la livraison.')">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +20,8 @@
     @stack('styles')
 </head>
 <body data-authenticated="{{ auth()->check() ? '1' : '0' }}">
+
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
     <header class="site-header">
         <div class="container site-header__inner">
@@ -119,7 +122,7 @@
         </div>
     </div>
 
-    <main>
+    <main id="main-content" tabindex="-1">
         @if (session('success'))
             <div class="container" style="padding-top:var(--space-4)">
                 <div class="alert alert-success" data-auto-dismiss>{{ session('success') }}</div>
