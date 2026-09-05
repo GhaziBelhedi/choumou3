@@ -15,9 +15,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages.css') }}">
     @stack('styles')
 </head>
-<body>
+<body data-authenticated="{{ auth()->check() ? '1' : '0' }}">
 
     <header class="site-header">
         <div class="container site-header__inner">
@@ -144,6 +145,7 @@
     </footer>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/wishlist.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
