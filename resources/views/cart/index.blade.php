@@ -38,7 +38,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($cart->items as $item)
-                                    <tr>
+                                    <tr data-cart-row>
                                         <td>
                                             <div class="flex" style="gap:var(--space-3)">
                                                 <img src="{{ $item->book->coverUrl() }}" alt="Couverture de {{ $item->book->title }}" loading="lazy" style="width:48px;height:68px;object-fit:cover;border-radius:var(--radius-sm)">
@@ -50,7 +50,7 @@
                                         </td>
                                         <td>{{ number_format((float) $item->book->price, 2) }} DT</td>
                                         <td>
-                                            <form method="POST" action="{{ route('cart.update', $item) }}">
+                                            <form method="POST" action="{{ route('cart.update', $item) }}" data-cart-update-form>
                                                 @csrf
                                                 @method('PATCH')
                                                 <div class="qty-stepper" data-qty-stepper data-auto-submit>
@@ -60,9 +60,9 @@
                                                 </div>
                                             </form>
                                         </td>
-                                        <td style="font-weight:600">{{ number_format($item->subtotal(), 2) }} DT</td>
+                                        <td style="font-weight:600" data-row-subtotal>{{ number_format($item->subtotal(), 2) }} DT</td>
                                         <td>
-                                            <form method="POST" action="{{ route('cart.destroy', $item) }}" onsubmit="return confirm('Retirer ce livre du panier ?')">
+                                            <form method="POST" action="{{ route('cart.destroy', $item) }}" data-cart-remove-form>
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="icon-btn" aria-label="Retirer" style="color:var(--color-danger)">✕</button>
@@ -77,7 +77,7 @@
                     <div class="card" style="max-width:420px;margin-left:auto;width:100%">
                         <h2 style="font-family:var(--font-serif);font-size:var(--text-xl);margin-bottom:var(--space-5)">Récapitulatif</h2>
 
-                        <form method="POST" action="{{ route('cart.coupon.apply') }}" class="flex" style="gap:var(--space-2);margin-bottom:var(--space-5)">
+                        <form method="POST" action="{{ route('cart.coupon.apply') }}" class="flex" style="gap:var(--space-2);margin-bottom:var(--space-5)" data-coupon-form>
                             @csrf
                             <input type="text" name="code" class="input" placeholder="Code promo" value="{{ $totals['coupon']->code ?? '' }}">
                             <button type="submit" class="btn btn-secondary">Appliquer</button>
@@ -86,7 +86,7 @@
                         @if ($totals['coupon'])
                             <div class="flex-between" style="margin-bottom:var(--space-3);font-size:var(--text-sm)">
                                 <span class="text-muted">Coupon « {{ $totals['coupon']->code }} »</span>
-                                <form method="POST" action="{{ route('cart.coupon.remove') }}">
+                                <form method="POST" action="{{ route('cart.coupon.remove') }}" data-coupon-form>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-primary" style="font-size:var(--text-xs)">Retirer</button>
@@ -96,7 +96,7 @@
 
                         <div class="flex-between" style="margin-bottom:var(--space-2);font-size:var(--text-sm)">
                             <span class="text-muted">Sous-total</span>
-                            <span>{{ number_format($totals['subtotal'], 2) }} DT</span>
+                            <span data-cart-subtotal>{{ number_format($totals['subtotal'], 2) }} DT</span>
                         </div>
 
                         @if ($totals['discount'] > 0)
@@ -119,7 +119,7 @@
 
                         <div class="flex-between" style="padding-top:var(--space-4);border-top:1px solid var(--color-border);font-weight:700;font-size:var(--text-lg);margin-bottom:var(--space-6)">
                             <span>Total</span>
-                            <span class="text-primary">{{ number_format($totals['subtotal'] - $totals['discount'], 2) }} DT</span>
+                            <span class="text-primary" data-cart-total>{{ number_format($totals['subtotal'] - $totals['discount'], 2) }} DT</span>
                         </div>
 
                         <a href="{{ route('checkout.address') }}" class="btn btn-primary btn-block btn-lg">Passer la commande</a>

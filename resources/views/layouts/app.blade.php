@@ -19,7 +19,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/pages.css') }}">
     @stack('styles')
 </head>
-<body data-authenticated="{{ auth()->check() ? '1' : '0' }}">
+<body
+    data-authenticated="{{ auth()->check() ? '1' : '0' }}"
+    @if(request()->routeIs('wishlist.index')) data-wishlist-page @endif
+    @if(session('success')) data-flash-success="{{ session('success') }}" @endif
+    @if(session('error')) data-flash-error="{{ session('error') }}" @endif
+>
 
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
@@ -90,9 +95,7 @@
 
                 <a href="{{ url('/panier') }}" class="icon-btn" aria-label="Panier">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"/></svg>
-                    @if(($cartCount ?? 0) > 0)
-                        <span class="icon-btn__badge">{{ $cartCount }}</span>
-                    @endif
+                    <span class="icon-btn__badge" data-cart-badge @if(($cartCount ?? 0) === 0) hidden @endif>{{ $cartCount ?? 0 }}</span>
                 </a>
 
                 <button type="button" class="menu-toggle icon-btn" data-menu-toggle aria-label="Menu" aria-expanded="false">
@@ -123,17 +126,6 @@
     </div>
 
     <main id="main-content" tabindex="-1">
-        @if (session('success'))
-            <div class="container" style="padding-top:var(--space-4)">
-                <div class="alert alert-success" data-auto-dismiss>{{ session('success') }}</div>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="container" style="padding-top:var(--space-4)">
-                <div class="alert alert-danger" data-auto-dismiss>{{ session('error') }}</div>
-            </div>
-        @endif
-
         @yield('content')
     </main>
 
@@ -172,6 +164,8 @@
     </footer>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/cart.js') }}"></script>
+    <script src="{{ asset('assets/js/wishlist.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

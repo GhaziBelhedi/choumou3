@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 </head>
-<body style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--space-6);background:var(--color-paper-soft)">
+<body
+    style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--space-6);background:var(--color-paper-soft)"
+    @if(session('success')) data-flash-success="{{ session('success') }}" @endif
+>
 
     <div style="width:100%;max-width:420px">
         <div style="text-align:center;margin-bottom:var(--space-8)">
@@ -34,10 +37,6 @@
                 </div>
             @endif
 
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
             @yield('content')
         </div>
 
@@ -46,5 +45,6 @@
         </p>
     </div>
 
+    <script src="{{ asset('assets/js/app.js') }}"></script>
 </body>
 </html>

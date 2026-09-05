@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\CartItem;
 use App\Services\CartService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,7 @@ class CartController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validate([
             'book_id' => ['required', 'exists:books,id'],
@@ -37,15 +38,15 @@ class CartController extends Controller
         $book = Book::active()->findOrFail($data['book_id']);
 
         if ($book->stock_quantity < 1) {
-            return back()->with('error', 'Ce livre est actuellement en rupture de stock.');
+            return $this->respond($request, false, 'Ce livre est actuellement en rupture de stock.');
         }
 
         $this->cartService->addItem($book, $data['quantity'] ?? 1);
 
-        return back()->with('success', 'Livre ajouté au panier.');
+        return $this->respond($request, true, "« {$book->title} » a été ajouté au panier.");
     }
 
-    public function update(Request $request, CartItem $item): RedirectResponse
+    public function update(Request $request, CartItem $item): RedirectResponse|JsonResponse
     {
         $this->authorizeItem($item);
 
@@ -54,33 +55,40 @@ class CartController extends Controller
         ]);
 
         $this->cartService->updateItem($item, $data['quantity']);
+        $item->refresh();
 
-        return back()->with('success', 'Panier mis à jour.');
+        return $this->respond($request, true, 'Panier mis à jour.', [
+            'item' => [
+                'id' => $item->id,
+                'quantity' => $item->quantity,
+                'subtotal' => number_format($item->subtotal(), 2),
+            ],
+        ]);
     }
 
-    public function destroy(CartItem $item): RedirectResponse
+    public function destroy(Request $request, CartItem $item): RedirectResponse|JsonResponse
     {
         $this->authorizeItem($item);
 
         $this->cartService->removeItem($item);
 
-        return back()->with('success', 'Article retiré du panier.');
+        return $this->respond($request, true, 'Article retiré du panier.', ['item_id' => $item->id]);
     }
 
-    public function applyCoupon(Request $request): RedirectResponse
+    public function applyCoupon(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validate(['code' => ['required', 'string']]);
 
         $result = $this->cartService->applyCoupon($data['code']);
 
-        return back()->with($result['success'] ? 'success' : 'error', $result['message']);
+        return $this->respond($request, $result['success'], $result['message']);
     }
 
-    public function removeCoupon(): RedirectResponse
+    public function removeCoupon(Request $request): RedirectResponse|JsonResponse
     {
         $this->cartService->removeCoupon();
 
-        return back()->with('success', 'Code promo retiré.');
+        return $this->respond($request, true, 'Code promo retiré.');
     }
 
     protected function authorizeItem(CartItem $item): void
@@ -88,5 +96,30 @@ class CartController extends Controller
         $cart = $this->cartService->currentCart();
 
         abort_unless($item->cart_id === $cart->id, 403);
+    }
+
+    /**
+     * Répond en JSON (requêtes AJAX) avec le panier à jour, ou redirige en HTML
+     * (fallback classique sans JS).
+     */
+    protected function respond(Request $request, bool $success, string $message, array $extra = []): RedirectResponse|JsonResponse
+    {
+        if ($request->wantsJson()) {
+            $cart = $this->cartService->currentCart();
+            $totals = $this->cartService->totals();
+
+            return response()->json(array_merge([
+                'success' => $success,
+                'message' => $message,
+                'cart_count' => $cart->itemsCount(),
+                'totals' => [
+                    'subtotal' => number_format($totals['subtotal'], 2),
+                    'discount' => number_format($totals['discount'], 2),
+                    'total' => number_format($totals['subtotal'] - $totals['discount'], 2),
+                ],
+            ], $extra), $success ? 200 : 422);
+        }
+
+        return back()->with($success ? 'success' : 'error', $message);
     }
 }

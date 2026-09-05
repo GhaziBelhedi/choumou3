@@ -89,7 +89,7 @@
             </div>
 
             @if ($book->stock_quantity > 0)
-                <form method="POST" action="{{ url('/panier') }}" class="product-buybox">
+                <form method="POST" action="{{ route('cart.store') }}" class="product-buybox" data-add-to-cart-form>
                     @csrf
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                     <div class="qty-stepper" data-qty-stepper>
@@ -97,7 +97,7 @@
                         <input type="number" name="quantity" value="1" min="1" max="{{ $book->stock_quantity }}">
                         <button type="button" data-qty-increment aria-label="Augmenter">+</button>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg" style="flex:1">Ajouter au panier</button>
+                    <button type="submit" class="btn btn-primary btn-lg" style="flex:1" data-loading-text="Ajout...">Ajouter au panier</button>
                 </form>
             @else
                 <div class="alert alert-info" style="margin-top:var(--space-6)">

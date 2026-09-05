@@ -6,8 +6,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     initMobileMenu();
     initDropdowns();
-    autoDismissAlerts();
     initQuantityStepper();
+    initToasts();
+    initScrollReveal();
 });
 
 /* ---------- Menu mobile ---------- */
@@ -74,15 +75,70 @@ function closeAllDropdowns() {
     });
 }
 
-/* ---------- Auto-dismiss des messages flash ---------- */
-function autoDismissAlerts() {
-    document.querySelectorAll('[data-auto-dismiss]').forEach(function (el) {
-        setTimeout(function () {
-            el.style.transition = 'opacity 300ms ease';
-            el.style.opacity = '0';
-            setTimeout(function () { el.remove(); }, 300);
-        }, 4000);
-    });
+/* ---------- Toasts ---------- */
+
+/**
+ * Affiche un toast (notification flottante), sans reload de page.
+ * type: 'success' | 'error' | 'info'
+ */
+window.showToast = function (message, type) {
+    if (!message) return;
+    type = type || 'success';
+
+    var stack = document.querySelector('[data-toast-stack]');
+    if (!stack) {
+        stack = document.createElement('div');
+        stack.className = 'toast-stack';
+        stack.setAttribute('data-toast-stack', '');
+        stack.setAttribute('aria-live', 'polite');
+        document.body.appendChild(stack);
+    }
+
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.textContent = message;
+    stack.appendChild(toast);
+
+    setTimeout(function () {
+        toast.classList.add('is-leaving');
+        setTimeout(function () { toast.remove(); }, 250);
+    }, 4000);
+};
+
+/**
+ * Convertit les messages flash serveur (session success/error, portés par
+ * des attributs data-* sur <body>) en toasts au chargement de la page —
+ * plus de bandeau qui n'apparaît qu'après le rendu complet de la page.
+ */
+function initToasts() {
+    var body = document.body;
+    var success = body.getAttribute('data-flash-success');
+    var error = body.getAttribute('data-flash-error');
+
+    if (success) window.showToast(success, 'success');
+    if (error) window.showToast(error, 'error');
+}
+
+/* ---------- Scroll reveal (fade/slide-in des sections au scroll) ---------- */
+function initScrollReveal() {
+    var targets = document.querySelectorAll('[data-reveal]');
+    if (!targets.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+        targets.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    targets.forEach(function (el) { observer.observe(el); });
 }
 
 /* ---------- Stepper quantité (fiche produit, panier) ---------- */
@@ -114,17 +170,25 @@ function initQuantityStepper() {
         input.addEventListener('change', function () {
             input.value = clamp(parseInt(input.value, 10) || 1);
             if (stepper.hasAttribute('data-auto-submit')) {
-                stepper.closest('form').submit();
+                var form = stepper.closest('form');
+                // requestSubmit() déclenche le vrai événement 'submit' (intercepté par
+                // cart.js pour l'AJAX) — contrairement à submit() qui le contourne.
+                if (form.requestSubmit) {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
             }
         });
     });
 }
 
-/* ---------- Helper fetch JSON (utilisé par cart.js, wishlist.js...) ---------- */
-window.postJSON = function (url, data) {
+/* ---------- Helper fetch JSON (utilisé par cart.js, wishlist.js, home.js...) ---------- */
+window.requestJSON = function (url, method, data) {
     var token = document.querySelector('meta[name="csrf-token"]');
+
     return fetch(url, {
-        method: 'POST',
+        method: method || 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -132,7 +196,18 @@ window.postJSON = function (url, data) {
         },
         body: JSON.stringify(data || {})
     }).then(function (res) {
-        if (!res.ok) throw new Error('Request failed: ' + res.status);
-        return res.json();
+        return res.json().catch(function () { return {}; }).then(function (json) {
+            if (!res.ok) {
+                var err = new Error(json.message || 'Request failed: ' + res.status);
+                err.payload = json;
+                throw err;
+            }
+            return json;
+        });
     });
+};
+
+// Alias rétro-compatible.
+window.postJSON = function (url, data) {
+    return window.requestJSON(url, 'POST', data);
 };

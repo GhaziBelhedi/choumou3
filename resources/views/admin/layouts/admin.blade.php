@@ -18,7 +18,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
     @stack('styles')
 </head>
-<body>
+<body
+    @if(session('success')) data-flash-success="{{ session('success') }}" @endif
+    @if(session('error')) data-flash-error="{{ session('error') }}" @endif
+>
 
     <a href="#admin-main-content" class="skip-link">Aller au contenu principal</a>
 
@@ -77,12 +80,6 @@
             </header>
 
             <div class="admin-content" id="admin-main-content" tabindex="-1">
-                @if (session('success'))
-                    <div class="alert alert-success" data-auto-dismiss>{{ session('success') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger" data-auto-dismiss>{{ session('error') }}</div>
-                @endif
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul style="padding-inline-start:var(--space-4);list-style:disc">
